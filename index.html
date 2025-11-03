@@ -180,17 +180,12 @@
   <nav class="fixed top-0 w-full bg-black/95 backdrop-blur-md border-b border-b1a96a z-50" style="border-bottom-color: #b1a96a;">
    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="flex justify-between items-center h-16">
-     <a href="#" class="flex items-center space-x-3 group" aria-label="Federazione Motociclistica Italiana - Home">
-  <img
-  src="fmi-logo.png"
-  alt="Logo FMI - Federazione Motociclistica Italiana"
-  class="h-10 w-auto drop-shadow mr-3"
-  loading="eager" decoding="async"
-/>
-<span id="site-title" class="text-xl font-bold text-white">
-  Dalla Scuola alla Pista
-</span>
-</a>
+     <div class="flex items-center space-x-3"><img src="logo-fmi.png" alt="Federazione Motociclistica Italiana - Logo" class="h-12 w-auto" onerror="this.src=''; this.style.display='none';">
+      <div class="motorcycle-icon">
+       <svg class="w-8 h-8" fill="currentColor" viewbox="0 0 24 24" style="color: #b1a96a;"><path d="M12 2L13.09 8.26L22 9L13.09 9.74L12 16L10.91 9.74L2 9L10.91 8.26L12 2Z" /> <circle cx="6" cy="18" r="3" /> <circle cx="18" cy="18" r="3" /> <path d="M9 18H15" /> <path d="M12 9V15" />
+       </svg>
+      </div><span id="site-title" class="text-xl font-bold text-white">Dalla Scuola alla Pista</span>
+     </div>
      <div class="hidden md:flex items-center space-x-8"><a href="#" class="nav-link text-white font-medium active" data-page="home">Home</a> <a href="#" class="nav-link text-white font-medium" data-page="programs">Programmi</a> <a href="#" class="nav-link text-white font-medium" data-page="calendar">Calendario</a> <a href="#" class="nav-link text-white font-medium" data-page="resources">Risorse</a> <a href="#" class="nav-link text-white font-medium" data-page="contact">Contatti</a> <button id="nav-iscriviti" class="btn-primary text-white font-bold py-2 px-6 rounded-full text-sm shadow-lg ml-4"> ISCRIVITI </button>
      </div><button id="mobile-menu-btn" class="md:hidden p-2 rounded-md text-white">
       <svg class="w-6 h-6" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
@@ -209,7 +204,7 @@
     <section class="racing-gradient hero-pattern min-h-screen flex items-center justify-center relative overflow-hidden">
      <div class="absolute inset-0 bg-black/20"></div>
      <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-      <div class="fade-in">
+      <div class="fade-in"><img src="logo-fmi.png" alt="Federazione Motociclistica Italiana - Logo" class="h-20 w-auto mx-auto mb-6" onerror="this.src=''; this.style.display='none';">
        <h1 id="hero-title" class="text-5xl md:text-7xl font-bold text-white mb-6 tracking-tight">FMI Open Days</h1>
        <p id="hero-subtitle" class="text-xl md:text-2xl text-gray-200 mb-12 max-w-3xl mx-auto leading-relaxed">Vivi la pista con le moto ufficiali del CIV Junior</p>
        <div class="flex flex-col sm:flex-row gap-6 justify-center items-center"><button id="primary-cta" class="btn-primary text-white font-bold py-4 px-12 rounded-full text-xl shadow-lg"> ISCRIVITI SUBITO </button> <button id="secondary-cta" class="bg-white/10 backdrop-blur-md text-white font-semibold py-4 px-8 rounded-full border-2 border-white/30 text-lg hover:bg-white/20 transition-all"> SCOPRI I PROGRAMMI </button>
@@ -288,17 +283,7 @@
          <li>• Istruttori FMI</li>
          <li>• Selezione ufficiale CIV Junior 2026</li>
          <li>• Due tappe disponibili</li>
-       </ul>
-</ul>
-<button
-   class="w-full text-white font-semibold py-3 px-6 rounded-lg transition-colors"
-   style="background-color: #b1a96a;"
-   onmouseover="this.style.backgroundColor='#d4c98a'"
-   onmouseout="this.style.backgroundColor='#b1a96a'"
-   onclick="goToPrograms()">
-  Scopri di più
-</button>
-</a>
+        </ul><button class="w-full text-white font-semibold py-3 px-6 rounded-lg transition-colors" style="background-color: #b1a96a;" onmouseover="this.style.backgroundColor='#d4c98a'" onmouseout="this.style.backgroundColor='#b1a96a'" onclick="showPage('calendar')"> Scopri le Tappe </button>
        </div>
       </div>
      </div>
@@ -566,7 +551,7 @@
    </div><!-- OTHER PAGES (simplified for demo) -->
    <div id="page-programs" class="page-content hidden min-h-screen bg-gray-50 pt-8">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-   <h1 id="programmi-top" class="text-4xl font-bold text-gray-900 mb-8">I Nostri Programmi</h1>
+     <h1 class="text-4xl font-bold text-gray-900 mb-8">I Nostri Programmi</h1>
      <p class="text-xl text-gray-600 mb-12">Il percorso ufficiale FMI per scoprire e formare i talenti della velocità</p><!-- Main Program - FMI Open Days -->
      <div class="mb-16">
       <div class="text-center mb-12">
@@ -813,9 +798,9 @@
          </svg><span class="text-gray-700">13 ottobre 2025 - Dalle 09:00 alle 17:00</span>
         </div>
        </div>
-       <p class="text-gray-600 mb-6">La prima giornata si è svolta sulla storica pista di Vallelunga, ottima per introdurre i ragazzi al paddock professionale del CIV. I partecipanti sono stati valutati per la selezione finale.</p><button class="w-full text-white font-semibold py-3 px-6 rounded-lg transition-colors flex items-center justify-center space-x-2" style="background-color: #003762;">
+       <p class="text-gray-600 mb-6">La prima giornata si è svolta sulla storica pista di Vallelunga, ottima per introdurre i ragazzi al paddock professionale del CIV. I partecipanti sono stati valutati per la selezione finale.</p><a href="https://www.google.com/maps/place/Autodromo+Vallelunga+Piero+Taruffi/@42.1567634,12.3668511,676m/data=!3m2!1e3!4b1!4m6!3m5!1s0x132f410e4080fdeb:0x12c20214365b5afa!8m2!3d42.1567634!4d12.369426!16s%2Fm%2F027hh1c?entry=ttu&amp;g_ep=EgoyMDI1MTAyOS4yIKXMDSoASAFQAw%3D%3D" target="_blank" rel="noopener noreferrer" class="w-full text-white font-semibold py-3 px-6 rounded-lg transition-colors flex items-center justify-center space-x-2" style="background-color: #003762;">
         <svg class="w-5 h-5" fill="currentColor" viewbox="0 0 20 20"><path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd" />
-        </svg><span>Vedi su Google Maps</span> </button>
+        </svg><span>Vedi su Google Maps</span> </a>
       </div><!-- Tappa 2 - Ottobiano -->
       <div class="event-card rounded-2xl p-8">
        <div class="flex items-center justify-between mb-6">
@@ -1011,26 +996,10 @@
 
         // Navigation functionality
         function showPage(pageId) {
-  // Nascondi tutte le "pagine"
-  document.querySelectorAll('.page-content').forEach(page => {
-    page.classList.add('hidden');
-  });
-
-  // Mostra la pagina selezionata
-  document.getElementById(`page-${pageId}`).classList.remove('hidden');
-
-  // Aggiorna lo stato della navbar
-  document.querySelectorAll('.nav-link').forEach(link => {
-    link.classList.toggle('active', link.dataset.page === pageId);
-  });
-}
-   function goToPrograms() {
-  showPage('programs');
-  setTimeout(() => {
-    const target = document.getElementById('programmi-top') || document.querySelector('#page-programs');
-    if (target) target.scrollIntoView({ behavior: 'smooth' });
-  }, 100);
-}
+            // Hide all pages
+            document.querySelectorAll('.page-content').forEach(page => {
+                page.classList.add('hidden');
+            });
             
             // Show selected page
             document.getElementById(`page-${pageId}`).classList.remove('hidden');
@@ -1634,5 +1603,5 @@
             }
         });
     </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'998c841e9526ea52',t:'MTc2MjE3OTY2NS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'998d893783a2ea52',t:'MTc2MjE5MDM2MC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
