@@ -1015,6 +1015,13 @@
             document.querySelectorAll('.page-content').forEach(page => {
                 page.classList.add('hidden');
             });
+         function goToPrograms() {
+  showPage('programs');
+  setTimeout(() => {
+    const target = document.getElementById("programmi-top");
+    if (target) target.scrollIntoView({ behavior: 'smooth' });
+  }, 200);
+}
             
             // Show selected page
             document.getElementById(`page-${pageId}`).classList.remove('hidden');
