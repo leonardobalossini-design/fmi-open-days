@@ -1011,16 +1011,25 @@
 
         // Navigation functionality
         function showPage(pageId) {
-            // Hide all pages
-            document.querySelectorAll('.page-content').forEach(page => {
-                page.classList.add('hidden');
-            });
-         function goToPrograms() {
+  // Nascondi tutte le "pagine"
+  document.querySelectorAll('.page-content').forEach(page => {
+    page.classList.add('hidden');
+  });
+
+  // Mostra la pagina selezionata
+  document.getElementById(`page-${pageId}`).classList.remove('hidden');
+
+  // Aggiorna lo stato della navbar
+  document.querySelectorAll('.nav-link').forEach(link => {
+    link.classList.toggle('active', link.dataset.page === pageId);
+  });
+}
+   function goToPrograms() {
   showPage('programs');
   setTimeout(() => {
-    const target = document.getElementById("programmi-top");
+    const target = document.getElementById('programmi-top') || document.querySelector('#page-programs');
     if (target) target.scrollIntoView({ behavior: 'smooth' });
-  }, 200);
+  }, 100);
 }
             
             // Show selected page
