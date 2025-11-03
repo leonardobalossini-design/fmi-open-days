@@ -1611,41 +1611,4 @@
         });
     </script>
  <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'998d893783a2ea52',t:'MTc2MjE5MDM2MC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
-     <script>
-  const mobileBtn  = document.getElementById('mobile-menu-btn');
-  const mobileMenu = document.getElementById('mobile-menu');
-
-  // Apri/chiudi menu
-  if (mobileBtn && mobileMenu) {
-    mobileBtn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      mobileMenu.classList.toggle('hidden');
-    });
-  }
-
-  // Chiudi quando clicchi una voce del menu o il bottone ISCRIVITI
-  document.querySelectorAll('#mobile-menu .nav-link, #mobile-menu #mobile-iscriviti')
-    .forEach(el => el.addEventListener('click', () => {
-      mobileMenu.classList.add('hidden');
-    }));
-
-  // Chiudi cliccando fuori dal menu
-  document.addEventListener('click', (e) => {
-    const clickInsideMenu = mobileMenu.contains(e.target);
-    const clickOnBtn = mobileBtn.contains(e.target);
-    if (!clickInsideMenu && !clickOnBtn) {
-      mobileMenu.classList.add('hidden');
-    }
-  });
-
-  // Chiudi su ESC
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') mobileMenu.classList.add('hidden');
-  });
-
-  // Se passi a desktop, nascondi comunque il menu mobile
-  window.addEventListener('resize', () => {
-    if (window.innerWidth >= 768) mobileMenu.classList.add('hidden');
-  });
-</script>
 </html>
