@@ -386,19 +386,39 @@
    </div><!-- REGISTRATION WIZARD -->
    <div id="registration-wizard" class="fixed inset-0 bg-black/50 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
     <div class="bg-white rounded-2xl shadow-2xl w-[92vw] sm:w-full max-w-lg sm:max-w-xl md:max-w-2xl lg:max-w-4xl max-h-[90%] overflow-y-auto mx-auto"><!-- Wizard Header -->
-    <div class="bg-[#003762] text-white px-4 py-4 sm:p-6 rounded-t-2xl">
-      <div class="flex justify-between items-center mb-4">
-      <h2 class="text-xl sm:text-2xl font-bold">Iscrizione FMI Training Camp</h2>
-      </div><!-- Progress Steps -->
-      <div class="flex space-x-4">
-       <div class="wizard-step active flex items-center space-x-2 px-4 py-2 rounded-full text-sm font-medium"><span>1</span> <span>Profilo</span>
-       </div>
-       <div class="wizard-step flex items-center space-x-2 px-4 py-2 rounded-full text-sm font-medium bg-white/20"><span>2</span> <span>Percorso</span>
-       </div>
-       <div class="wizard-step flex items-center space-x-2 px-4 py-2 rounded-full text-sm font-medium bg-white/20"><span>3</span> <span>Logistica</span>
-       </div>
-       <div class="wizard-step flex items-center space-x-2 px-4 py-2 rounded-full text-sm font-medium bg-white/20"><span>4</span> <span>Conferma</span>
-       </div>
+<div class="relative bg-gradient-to-r from-black via-[#0b1b2a] to-[#003762] text-white px-4 py-5 sm:py-6 rounded-t-2xl overflow-hidden">
+
+  <!-- Logo FMI in trasparenza che “sborda” -->
+  <img src="fmi-logo.png"
+       alt="FMI"
+       class="pointer-events-none select-none absolute -top-10 left-1/2 -translate-x-1/2 opacity-10 md:opacity-15"
+       style="width:340px; max-width:none;">
+
+  <!-- Titolo -->
+  <div class="relative z-10 text-center">
+    <h2 class="text-lg sm:text-2xl font-bold tracking-tight">
+      Iscrizione FMI Training Camp
+    </h2>
+  </div>
+
+  <!-- Progress Steps: compatti e scrollabili su mobile -->
+  <div class="relative z-10 mt-4 -mx-4 px-4 overflow-x-auto no-scrollbar">
+    <div class="flex items-center gap-2 sm:gap-3 w-max">
+      <div class="wizard-step active flex items-center gap-2 px-3 py-1.5 rounded-full text-xs sm:text-sm font-medium bg-white/15">
+        <span>1</span><span>Profilo</span>
+      </div>
+      <div class="wizard-step flex items-center gap-2 px-3 py-1.5 rounded-full text-xs sm:text-sm font-medium bg-white/10">
+        <span>2</span><span>Percorso</span>
+      </div>
+      <div class="wizard-step flex items-center gap-2 px-3 py-1.5 rounded-full text-xs sm:text-sm font-medium bg-white/10">
+        <span>3</span><span>Logistica</span>
+      </div>
+      <div class="wizard-step flex items-center gap-2 px-3 py-1.5 rounded-full text-xs sm:text-sm font-medium bg-white/10">
+        <span>4</span><span>Conferma</span>
+      </div>
+    </div>
+  </div>
+</div>
       </div>
      </div><!-- Wizard Content -->
      <div class="p-8"><!-- Step 1: Profilo -->
