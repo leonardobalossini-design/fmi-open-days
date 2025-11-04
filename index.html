@@ -1431,11 +1431,18 @@
             const baseFontStack = 'system-ui, -apple-system, sans-serif';
 
             // Update text content
-            document.getElementById('site-title').textContent = config.site_title || defaultConfig.site_title;
-            document.getElementById('hero-title').textContent = config.hero_title || defaultConfig.hero_title;
-            document.getElementById('hero-subtitle').textContent = config.hero_subtitle || defaultConfig.hero_subtitle;
-            document.getElementById('primary-cta').textContent = config.primary_cta || defaultConfig.primary_cta;
-            document.getElementById('secondary-cta').textContent = config.secondary_cta || defaultConfig.secondary_cta;
+            // Update text content (safe checks)
+const siteTitleEl    = document.getElementById('site-title');
+const heroTitleEl    = document.getElementById('hero-title');
+const heroSubEl      = document.getElementById('hero-subtitle');
+const primaryCtaEl   = document.getElementById('primary-cta');
+const secondaryCtaEl = document.getElementById('secondary-cta');
+
+if (siteTitleEl)    siteTitleEl.textContent    = config.site_title    || defaultConfig.site_title;
+if (heroTitleEl)    heroTitleEl.textContent    = config.hero_title    || defaultConfig.hero_title;
+if (heroSubEl)      heroSubEl.textContent      = config.hero_subtitle || defaultConfig.hero_subtitle;
+if (primaryCtaEl)   primaryCtaEl.textContent   = config.primary_cta   || defaultConfig.primary_cta;
+if (secondaryCtaEl) secondaryCtaEl.textContent = config.secondary_cta || defaultConfig.secondary_cta;
 
             // Update colors
             const backgroundColor = config.background_color || defaultConfig.background_color;
