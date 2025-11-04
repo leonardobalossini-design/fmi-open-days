@@ -1580,12 +1580,6 @@
                 });
             });
             
-            // Mobile menu
-            document.getElementById('mobile-menu-btn').addEventListener('click', () => {
-                const menu = document.getElementById('mobile-menu');
-                menu.classList.toggle('hidden');
-            });
-            
             // CTA buttons
             document.getElementById('primary-cta').addEventListener('click', showRegistrationWizard);
             document.getElementById('secondary-cta').addEventListener('click', () => showPage('calendar'));
@@ -1609,24 +1603,48 @@
                 });
             }
         });
-    </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'998d893783a2ea52',t:'MTc2MjE5MDM2MC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
-    <script>
+   <script>
 document.addEventListener("DOMContentLoaded", function () {
-  const mobileMenu = document.getElementById("mobile-menu");
-  const menuLinks = mobileMenu.querySelectorAll("a");
-  const toggleBtn = document.getElementById("mobile-menu-btn");
+  const mobileMenu   = document.getElementById("mobile-menu");
+  const toggleBtn    = document.getElementById("mobile-menu-btn");
+  const navLinks     = document.querySelectorAll("#mobile-menu a, #mobile-menu button");
+  const bodyEl       = document.body;
 
-  // Chiudi menu quando clicchi una voce
-  menuLinks.forEach(link => {
-    link.addEventListener("click", () => {
+  if (!mobileMenu || !toggleBtn) return;
+
+  // Apri/chiudi la tendina
+  toggleBtn.addEventListener("click", () => {
+    mobileMenu.classList.toggle("hidden");
+    // lock/unlock scroll sotto la tendina (qualità di vita)
+    if (mobileMenu.classList.contains("hidden")) {
+      bodyEl.style.overflow = "";
+    } else {
+      bodyEl.style.overflow = "hidden";
+    }
+    // accessibilità
+    const expanded = toggleBtn.getAttribute("aria-expanded") === "true";
+    toggleBtn.setAttribute("aria-expanded", String(!expanded));
+  });
+
+  // Chiudi la tendina quando clicchi un link o il bottone ISCRIVITI dentro il menu
+  navLinks.forEach(el => {
+    el.addEventListener("click", () => {
       mobileMenu.classList.add("hidden");
+      bodyEl.style.overflow = "";
+      toggleBtn.setAttribute("aria-expanded", "false");
     });
   });
 
-  // Toggle menu su apertura/chiusura con il bottone
-  toggleBtn.addEventListener("click", () => {
-    mobileMenu.classList.toggle("hidden");
+  // Chiudi se clicchi fuori dal menu (tap su overlay/esterno)
+  document.addEventListener("click", (e) => {
+    const clickInsideMenu = mobileMenu.contains(e.target);
+    const clickOnButton   = toggleBtn.contains(e.target);
+    const isOpen          = !mobileMenu.classList.contains("hidden");
+    if (isOpen && !clickInsideMenu && !clickOnButton) {
+      mobileMenu.classList.add("hidden");
+      bodyEl.style.overflow = "";
+      toggleBtn.setAttribute("aria-expanded", "false");
+    }
   });
 });
 </script>
