@@ -605,15 +605,85 @@
       </div>
 
       <!-- Step 2: Percorso -->
-      <div id="step-2" class="wizard-content hidden">
-        <!-- lascia invariato il contenuto dello Step 2 originale -->
-      </div>
+<div id="step-2" class="wizard-content hidden">
+  <h3 class="text-xl font-bold text-gray-900 mb-6">Scegli la Tua Tappa</h3>
+  <form class="space-y-6">
 
-      <!-- Step 3: Logistica -->
-      <div id="step-3" class="wizard-content hidden">
-        <!-- lascia invariato lo Step 3 originale -->
-      </div>
+    <div class="bg-blue-50 border border-blue-200 rounded-lg p-6 mb-6">
+      <h4 class="font-semibold text-blue-900 mb-2">FMI Open Days - Selezione CIV Junior 2026</h4>
+      <p class="text-blue-800 text-sm">Partecipa alla selezione ufficiale per accedere al Campionato Italiano Velocità Junior. I migliori di ogni tappa accederanno alla fase finale.</p>
+    </div>
 
+    <div>
+      <label class="block text-sm font-medium text-gray-700 mb-4">Tappa *</label>
+      <div class="grid md:grid-cols-2 gap-4">
+
+        <!-- Vallelunga -->
+        <label class="tappa-card cursor-pointer border-2 border-gray-200 rounded-lg p-6 hover:border-red-500 transition-colors">
+          <input type="radio" name="tappa" value="vallelunga" class="sr-only">
+          <div class="text-center">
+            <div class="w-12 h-12 mx-auto mb-3 bg-gray-100 rounded-full flex items-center justify-center">
+              <svg class="w-6 h-6 text-gray-600" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M3 3h18v2H3V3zm0 4h18v2H3V7zm0 4h18v2H3v-2zm0 4h18v2H3v-2zm0 4h18v2H3v-2z"/>
+              </svg>
+            </div>
+            <h4 class="font-semibold text-gray-900 mb-2">Tappa 1 - Vallelunga</h4>
+            <div class="text-sm text-gray-600 space-y-1">
+              <p><strong>13 ottobre 2025</strong></p>
+              <p>Dalle 09:00 alle 17:00</p>
+              <p>Campagnano di Roma</p>
+            </div>
+          </div>
+        </label>
+
+        <!-- Ottobiano -->
+        <label class="tappa-card cursor-pointer border-2 border-gray-200 rounded-lg p-6 hover:border-red-500 transition-colors">
+          <input type="radio" name="tappa" value="ottobiano" class="sr-only">
+          <div class="text-center">
+            <div class="w-12 h-12 mx-auto mb-3 bg-gray-100 rounded-full flex items-center justify-center">
+              <svg class="w-6 h-6 text-gray-600" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M3 3h18v2H3V3zm0 4h18v2H3V7zm0 4h18v2H3v-2zm0 4h18v2H3v-2zm0 4h18v2H3v-2z"/>
+              </svg>
+            </div>
+            <h4 class="font-semibold text-gray-900 mb-2">Tappa 2 - Ottobiano</h4>
+            <div class="text-sm text-gray-600 space-y-1">
+              <p><strong>27 ottobre 2025</strong></p>
+              <p>Dalle 08:30 alle 17:00</p>
+              <p>Pavia</p>
+            </div>
+          </div>
+        </label>
+
+      </div>
+    </div>
+
+  </form>
+</div>
+
+<!-- Step 3: Logistica -->
+<div id="step-3" class="wizard-content hidden">
+  <h3 class="text-xl font-bold text-gray-900 mb-6">Logistica e Moto</h3>
+  <form class="space-y-6">
+    <div>
+      <label class="block text-sm font-medium text-gray-700 mb-2">Hai già l’abbigliamento tecnico obbligatorio?</label>
+      <select class="w-full px-4 py-3 border border-gray-300 rounded-lg">
+        <option>Sì, completo</option>
+        <option>Parziale</option>
+        <option>No, da fornire</option>
+      </select>
+    </div>
+
+    <div>
+      <label class="block text-sm font-medium text-gray-700 mb-2">Moto utilizzata *</label>
+      <select id="moto" name="moto" required class="w-full px-4 py-3 border border-gray-300 rounded-lg">
+        <option value="">Seleziona la moto</option>
+        <option value="ohvale160">Ohvale 160</option>
+        <option value="ohvale190">Ohvale 190</option>
+      </select>
+    </div>
+
+  </form>
+</div>
       <!-- Step 4: Conferma -->
       <div id="step-4" class="wizard-content hidden">
         <h3 class="text-xl font-bold text-gray-900 mb-6">Riepilogo Iscrizione</h3>
