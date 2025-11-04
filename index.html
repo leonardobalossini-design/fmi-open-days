@@ -1621,7 +1621,8 @@ if (secondaryCtaEl) secondaryCtaEl.textContent = config.secondary_cta || default
             document.getElementById('mobile-iscriviti').addEventListener('click', showRegistrationWizard);
             
             // Wizard controls
-            document.getElementById('close-wizard').addEventListener('click', hideRegistrationWizard);
+            const closeBtn = document.getElementById('close-wizard');
+            if (closeBtn) closeBtn.addEventListener('click', hideRegistrationWizard);
             document.getElementById('next-step').addEventListener('click', nextStep);
             document.getElementById('prev-step').addEventListener('click', prevStep);
             
