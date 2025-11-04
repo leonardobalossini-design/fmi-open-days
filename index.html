@@ -1692,43 +1692,58 @@ if (secondaryCtaEl) secondaryCtaEl.textContent = config.secondary_cta || default
 
         // Event listeners
         document.addEventListener('DOMContentLoaded', () => {
-            // Initialize all functionality
-            initializeDataSDK();
-            initializeFAQ();
-            initializeFormInteractions();
-            
-            // Navigation
-            document.querySelectorAll('.nav-link').forEach(link => {
-                link.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    showPage(link.dataset.page);
-                });
-            });
-            
-            // CTA buttons
-            document.getElementById('primary-cta').addEventListener('click', showRegistrationWizard);
-            document.getElementById('secondary-cta').addEventListener('click', () => showPage('calendar'));
-            
-            // Navigation registration buttons
-            document.getElementById('nav-iscriviti').addEventListener('click', showRegistrationWizard);
-            document.getElementById('mobile-iscriviti').addEventListener('click', showRegistrationWizard);
-            
-            // Wizard controls
-            const closeBtn = document.getElementById('close-wizard');
-            if (closeBtn) closeBtn.addEventListener('click', hideRegistrationWizard);
-            document.getElementById('next-step').addEventListener('click', nextStep);
-            document.getElementById('prev-step').addEventListener('click', prevStep);
-            
-            // Initialize Element SDK
-                        if (window.elementSdk) {
-                window.elementSdk.init({
-                    defaultConfig,
-                    onConfigChange,
-                    mapToCapabilities,
-                    mapToEditPanelValues
-                });
-            }
-        });
+  // SDK dati (protetto)
+  try { initializeDataSDK(); } catch (e) { console.warn('DataSDK init skipped:', e); }
+
+  // FAQ (protetto)
+  try { initializeFAQ(); } catch (e) { console.warn('FAQ init skipped:', e); }
+
+  // Form interactions (protetto)
+  try { initializeFormInteractions(); } catch (e) { console.warn('Form interactions init skipped:', e); }
+
+  // Navigation desktop (null-safe)
+  document.querySelectorAll('.nav-link').forEach(link => {
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      const pid = link.dataset.page;
+      if (pid) showPage(pid);
+    });
+  });
+
+  // CTA buttons (null-safe)
+    const primaryCta   = document.getElementById('primary-cta');
+    const secondaryCta = document.getElementById('secondary-cta');
+    const navIscriviti = document.getElementById('nav-iscriviti');
+    const mobileIscr   = document.getElementById('mobile-iscriviti');
+
+    if (primaryCta)   primaryCta.addEventListener('click', showRegistrationWizard);
+    if (secondaryCta) secondaryCta.addEventListener('click', () => showPage('calendar'));
+    if (navIscriviti) navIscriviti.addEventListener('click', showRegistrationWizard);
+    if (mobileIscr)   mobileIscr.addEventListener('click', showRegistrationWizard);
+
+  // Wizard controls (null-safe)
+    const closeBtn = document.getElementById('close-wizard');
+    const nextBtn  = document.getElementById('next-step');
+    const prevBtn  = document.getElementById('prev-step');
+
+    if (closeBtn) closeBtn.addEventListener('click', hideRegistrationWizard);
+    if (nextBtn)  nextBtn.addEventListener('click', nextStep);
+    if (prevBtn)  prevBtn.addEventListener('click', prevStep);
+
+  // Initialize Element SDK (protetto)
+    try {
+     if (window.elementSdk) {
+      window.elementSdk.init({
+        defaultConfig,
+        onConfigChange,
+        mapToCapabilities,
+        mapToEditPanelValues
+      });
+    }
+    } catch (e) {
+      console.warn('ElementSDK init skipped:', e);
+    }
+  });
     </script>
     <script>
 document.addEventListener("DOMContentLoaded", function () {
