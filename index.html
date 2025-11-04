@@ -662,28 +662,53 @@
 
 <!-- Step 3: Logistica -->
 <div id="step-3" class="wizard-content hidden">
-  <h3 class="text-xl font-bold text-gray-900 mb-6">Logistica e Moto</h3>
-  <form class="space-y-6">
-    <div>
-      <label class="block text-sm font-medium text-gray-700 mb-2">Hai già l’abbigliamento tecnico obbligatorio?</label>
-      <select class="w-full px-4 py-3 border border-gray-300 rounded-lg">
-        <option>Sì, completo</option>
-        <option>Parziale</option>
-        <option>No, da fornire</option>
-      </select>
-    </div>
-
-    <div>
-      <label class="block text-sm font-medium text-gray-700 mb-2">Moto utilizzata *</label>
-      <select id="moto" name="moto" required class="w-full px-4 py-3 border border-gray-300 rounded-lg">
-        <option value="">Seleziona la moto</option>
-        <option value="ohvale160">Ohvale 160</option>
-        <option value="ohvale190">Ohvale 190</option>
-      </select>
-    </div>
-
-  </form>
-</div>
+       <h3 class="text-xl font-bold text-gray-900 mb-6">Dettagli Logistici</h3>
+       <form class="space-y-6"><!-- Moto Selection (only for Open Day) -->
+        <div id="moto-selection" class="hidden"><label class="block text-sm font-medium text-gray-700 mb-4">Moto Richiesta *</label>
+         <div class="grid md:grid-cols-3 gap-4"><label class="moto-card cursor-pointer border-2 border-gray-200 rounded-lg p-4 hover:border-red-500 transition-colors"> <input type="radio" name="moto-richiesta" value="gp7" class="sr-only">
+           <div class="text-center">
+            <div class="w-10 h-10 mx-auto mb-2 bg-red-100 rounded-full flex items-center justify-center">
+             <svg class="w-5 h-5 text-red-600" fill="currentColor" viewbox="0 0 24 24"><path d="M12 2L13.09 8.26L22 9L13.09 9.74L12 16L10.91 9.74L2 9L10.91 8.26L12 2Z" /> <circle cx="6" cy="18" r="3" /> <circle cx="18" cy="18" r="3" /> <path d="M9 18H15" /> <path d="M12 9V15" />
+             </svg>
+            </div>
+            <h4 class="font-semibold text-gray-900">GP7</h4>
+            <p class="text-sm text-gray-600">13+ anni</p>
+           </div></label> <label class="moto-card cursor-pointer border-2 border-gray-200 rounded-lg p-4 hover:border-red-500 transition-colors"> <input type="radio" name="moto-richiesta" value="190" class="sr-only">
+           <div class="text-center">
+            <div class="w-10 h-10 mx-auto mb-2 bg-blue-100 rounded-full flex items-center justify-center">
+             <svg class="w-5 h-5 text-blue-600" fill="currentColor" viewbox="0 0 24 24"><path d="M12 2L13.09 8.26L22 9L13.09 9.74L12 16L10.91 9.74L2 9L10.91 8.26L12 2Z" /> <circle cx="6" cy="18" r="3" /> <circle cx="18" cy="18" r="3" /> <path d="M9 18H15" /> <path d="M12 9V15" />
+             </svg>
+            </div>
+            <h4 class="font-semibold text-gray-900">Ohvale 190</h4>
+            <p class="text-sm text-gray-600">12+ anni</p>
+           </div></label> <label class="moto-card cursor-pointer border-2 border-gray-200 rounded-lg p-4 hover:border-red-500 transition-colors"> <input type="radio" name="moto-richiesta" value="160" class="sr-only">
+           <div class="text-center">
+            <div class="w-10 h-10 mx-auto mb-2 bg-green-100 rounded-full flex items-center justify-center">
+             <svg class="w-5 h-5 text-green-600" fill="currentColor" viewbox="0 0 24 24"><path d="M12 2L13.09 8.26L22 9L13.09 9.74L12 16L10.91 9.74L2 9L10.91 8.26L12 2Z" /> <circle cx="6" cy="18" r="3" /> <circle cx="18" cy="18" r="3" /> <path d="M9 18H15" /> <path d="M12 9V15" />
+             </svg>
+            </div>
+            <h4 class="font-semibold text-gray-900">Ohvale 160</h4>
+            <p class="text-sm text-gray-600">10+ anni</p>
+           </div></label>
+         </div>
+        </div><!-- Equipment Request -->
+        <div><label class="flex items-center"> <input type="checkbox" id="equipaggiamento" name="equipaggiamento" class="mr-3 w-4 h-4 text-red-600"> <span class="text-sm font-medium text-gray-700">Richiedo l'equipaggiamento tecnico FMI (tuta, casco, guanti, stivali)</span> </label>
+        </div><!-- Equipment Sizes -->
+        <div id="equipment-sizes" class="hidden bg-blue-50 border border-blue-200 rounded-lg p-6">
+         <h4 class="font-semibold text-gray-900 mb-4">Taglie Equipaggiamento</h4>
+         <div class="grid md:grid-cols-3 gap-4">
+          <div><label for="taglia-tuta" class="block text-sm font-medium text-gray-700 mb-2">Taglia Tuta</label> <select id="taglia-tuta" name="taglia-tuta" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"> <option value="">Seleziona</option> <option value="46">46</option> <option value="48">48</option> <option value="50">50</option> <option value="52">52</option> <option value="54">54</option> <option value="56">56</option> <option value="58">58</option> <option value="60">60</option> </select>
+          </div>
+          <div><label for="taglia-casco" class="block text-sm font-medium text-gray-700 mb-2">Taglia Casco</label> <select id="taglia-casco" name="taglia-casco" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"> <option value="">Seleziona</option> <option value="XS">XS</option> <option value="S">S</option> <option value="M">M</option> <option value="L">L</option> <option value="XL">XL</option> </select>
+          </div>
+          <div><label for="taglia-stivali" class="block text-sm font-medium text-gray-700 mb-2">Taglia Stivali</label> <select id="taglia-stivali" name="taglia-stivali" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"> <option value="">Seleziona</option> <option value="35">35</option> <option value="36">36</option> <option value="37">37</option> <option value="38">38</option> <option value="39">39</option> <option value="40">40</option> <option value="41">41</option> <option value="42">42</option> <option value="43">43</option> <option value="44">44</option> <option value="45">45</option> <option value="46">46</option> <option value="47">47</option> <option value="48">48</option> </select>
+          </div>
+         </div>
+        </div><!-- Consents -->
+        <div class="space-y-4">
+         <h4 class="font-semibold text-gray-900">Consensi Obbligatori</h4><label class="flex items-start"> <input type="checkbox" id="consenso-privacy" name="consenso-privacy" required class="mr-3 w-4 h-4 text-red-600 mt-1"> <span class="text-sm text-gray-700">Accetto il trattamento dei dati personali secondo la normativa vigente e autorizzo FMI al loro utilizzo per le finalità del progetto *</span> </label> <label class="flex items-start"> <input type="checkbox" id="consenso-comunicazioni" name="consenso-comunicazioni" class="mr-3 w-4 h-4 text-red-600 mt-1"> <span class="text-sm text-gray-700">Accetto di ricevere comunicazioni operative relative agli eventi FMI Training Camp</span> </label> <label class="flex items-start"> <input type="checkbox" id="consenso-immagini" name="consenso-immagini" class="mr-3 w-4 h-4 text-red-600 mt-1"> <span class="text-sm text-gray-700">Autorizzo l'utilizzo di foto e video per scopi promozionali FMI</span> </label>
+        </div>
+       </form>
       <!-- Step 4: Conferma -->
       <div id="step-4" class="wizard-content hidden">
         <h3 class="text-xl font-bold text-gray-900 mb-6">Riepilogo Iscrizione</h3>
