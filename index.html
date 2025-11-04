@@ -1601,7 +1601,7 @@ if (secondaryCtaEl) secondaryCtaEl.textContent = config.secondary_cta || default
             document.getElementById('prev-step').addEventListener('click', prevStep);
             
             // Initialize Element SDK
-            if (window.elementSdk) {
+                        if (window.elementSdk) {
                 window.elementSdk.init({
                     defaultConfig,
                     onConfigChange,
@@ -1610,7 +1610,8 @@ if (secondaryCtaEl) secondaryCtaEl.textContent = config.secondary_cta || default
                 });
             }
         });
-   <script>
+    </script>
+    <script>
 document.addEventListener("DOMContentLoaded", function () {
   const mobileMenu   = document.getElementById("mobile-menu");
   const toggleBtn    = document.getElementById("mobile-menu-btn");
