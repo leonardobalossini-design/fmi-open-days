@@ -1225,14 +1225,20 @@
         }
 
         function hideRegistrationWizard() {
-            const modal = document.getElementById('registration-wizard');
-            modal.classList.add('hidden');
-            modal.classList.remove('flex');
-            // sblocca lo scroll del body
-            document.body.style.overflow = '';
+  const modal = document.getElementById('registration-wizard');
 
-            resetWizard();
-       }
+  // disabilita temporaneamente gli eventi sul modal
+  modal.style.pointerEvents = 'none';
+
+  modal.classList.add('hidden');
+  modal.classList.remove('flex');
+  document.body.style.overflow = '';
+
+  // riabilita al frame successivo
+  requestAnimationFrame(() => { modal.style.pointerEvents = ''; });
+
+  resetWizard();
+}
 
         function resetWizard() {
             currentStep = 1;
