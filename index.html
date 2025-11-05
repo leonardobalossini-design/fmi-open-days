@@ -1808,7 +1808,13 @@ if (secondaryCtaEl) secondaryCtaEl.textContent = config.secondary_cta || default
     const nextBtn  = document.getElementById('next-step');
     const prevBtn  = document.getElementById('prev-step');
 
-    if (closeBtn) closeBtn.addEventListener('click', hideRegistrationWizard);
+   if (closeBtn) {
+  closeBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    e.stopPropagation();        // blocca il pass-through del click
+    hideRegistrationWizard();
+  });
+}
     if (nextBtn)  nextBtn.addEventListener('click', nextStep);
     if (prevBtn)  prevBtn.addEventListener('click', prevStep);
 
