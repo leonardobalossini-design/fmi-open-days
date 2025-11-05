@@ -169,6 +169,16 @@
         .event-card li {
             color: #000000 !important;
         }
+   /* Blocca lo scroll orizzontale del wizard */
+#registration-wizard .modal-panel {
+  touch-action: pan-y;
+  overscroll-behavior: contain;
+}
+
+#wizard-body {
+  overflow-y: auto;
+  overflow-x: hidden;
+}
     </style>
   <style>@view-transition { navigation: auto; }</style>
  </head>
