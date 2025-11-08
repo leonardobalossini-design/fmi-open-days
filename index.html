@@ -1847,16 +1847,43 @@ if (secondaryCtaEl) secondaryCtaEl.textContent = config.secondary_cta || default
     });
   });
 
-  // CTA buttons (null-safe)
-    const primaryCta   = document.getElementById('primary-cta');
-    const secondaryCta = document.getElementById('secondary-cta');
-    const navIscriviti = document.getElementById('nav-iscriviti');
-    const mobileIscr   = document.getElementById('mobile-iscriviti');
+    // CTA buttons (null-safe)
+  const primaryCta   = document.getElementById("primary-cta");
+  const secondaryCta = document.getElementById("secondary-cta");
+  const navIscriviti = document.getElementById("nav-iscriviti");
+  const mobileIscr   = document.getElementById("mobile-iscriviti");
 
-    if (primaryCta)   primaryCta.addEventListener('click', showRegistrationWizard);
-    if (secondaryCta) secondaryCta.addEventListener('click', () => showPage('calendar'));
-    if (navIscriviti) navIscriviti.addEventListener('click', showRegistrationWizard);
-    if (mobileIscr)   mobileIscr.addEventListener('click', showRegistrationWizard);
+  // Bottone principale in home
+  if (primaryCta) {
+    primaryCta.addEventListener("click", (e) => {
+      e.preventDefault();
+      showRegistrationWizard();
+    });
+  }
+
+  // Secondario porta al calendario
+  if (secondaryCta) {
+    secondaryCta.addEventListener("click", (e) => {
+      e.preventDefault();
+      showPage("calendar");
+    });
+  }
+
+  // ISCRIVITI nella navbar: funziona da qualsiasi pagina
+  if (navIscriviti) {
+    navIscriviti.addEventListener("click", (e) => {
+      e.preventDefault();
+      showRegistrationWizard();
+    });
+  }
+
+  // ISCRIVITI nel menu mobile (se esiste)
+  if (mobileIscr) {
+    mobileIscr.addEventListener("click", (e) => {
+      e.preventDefault();
+      showRegistrationWizard();
+    });
+  }
 
   // Wizard controls (null-safe)
     const closeBtn = document.getElementById('close-wizard');
