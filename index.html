@@ -1274,29 +1274,37 @@
         }
 
                 // Navigation functionality
-        function showPage(pageId) {
-            // Nascondi tutte le pagine
-            document.querySelectorAll('.page-content').forEach(page => {
-                page.classList.add('hidden');
-            });
+       function showPage(pageId) {
+  // Nascondi tutte le sezioni
+  const pages = document.querySelectorAll('.page-content');
+  pages.forEach(p => p.classList.add('hidden'));
 
-            // Mostra la pagina selezionata
-            const target = document.getElementById(`page-${pageId}`);
-            if (target) {
-                target.classList.remove('hidden');
-            }
+  // Trova la sezione target
+  const expectedId = `page-${pageId}`;
+  let target = document.getElementById(expectedId);
 
-            // Aggiorna lo stato della navbar
-            document.querySelectorAll('.nav-link').forEach(link => {
-                link.classList.remove('active');
-                if (link.dataset.page === pageId) {
-                    link.classList.add('active');
-                }
-            });
+  // Fallback: se non esiste, vai in home e logga
+  if (!target) {
+    console.error(`Sezione non trovata: #${expectedId} — verifica l'ID nel markup`);
+    target = document.getElementById('page-home');
+  }
 
-            // Assicura che il body possa scrollare
-            document.body.style.overflow = "";
-        }
+  // Mostra la sezione
+  if (target) {
+    target.classList.remove('hidden');
+  }
+
+  // Aggiorna stato navbar
+  document.querySelectorAll('.nav-link').forEach(link => {
+    link.classList.remove('active');
+    if (link.dataset.page === pageId) {
+      link.classList.add('active');
+    }
+  });
+
+  // Sblocca sempre lo scroll
+  document.body.style.overflow = '';
+}
 
         // Registration wizard functionality
         function showRegistrationWizard() {
