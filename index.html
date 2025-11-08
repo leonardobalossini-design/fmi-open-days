@@ -1236,23 +1236,29 @@
             }
         }
 
-        // Navigation functionality
+                // Navigation functionality
         function showPage(pageId) {
-            // Hide all pages
+            // Nascondi tutte le pagine
             document.querySelectorAll('.page-content').forEach(page => {
                 page.classList.add('hidden');
             });
-            
-            // Show selected page
-            document.getElementById(`page-${pageId}`).classList.remove('hidden');
-            
-            // Update navigation
+
+            // Mostra la pagina selezionata
+            const target = document.getElementById(`page-${pageId}`);
+            if (target) {
+                target.classList.remove('hidden');
+            }
+
+            // Aggiorna lo stato della navbar
             document.querySelectorAll('.nav-link').forEach(link => {
                 link.classList.remove('active');
                 if (link.dataset.page === pageId) {
                     link.classList.add('active');
                 }
             });
+
+            // Assicura che il body possa scrollare
+            document.body.style.overflow = "";
         }
 
         // Registration wizard functionality
