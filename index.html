@@ -1873,7 +1873,7 @@ if (secondaryCtaEl) secondaryCtaEl.textContent = config.secondary_cta || default
         }
 
         // Event listeners
-        document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', () => {
   // SDK dati (protetto)
   try { initializeDataSDK(); } catch (e) { console.warn('DataSDK init skipped:', e); }
 
@@ -1891,6 +1891,10 @@ if (secondaryCtaEl) secondaryCtaEl.textContent = config.secondary_cta || default
       if (pid) showPage(pid);
     });
   });
+
+  // Inizializza lo stato: mostra sempre la Home all'avvio
+  showPage('home');
+});
 
     // CTA buttons (null-safe)
   const primaryCta   = document.getElementById("primary-cta");
