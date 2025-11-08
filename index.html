@@ -1360,7 +1360,6 @@
                 } else if (index + 1 < currentStep) {
                     step.classList.add('completed');
                 }
-               adjustStepsSpacing();
             });
             
             // Show/hide content
@@ -1387,8 +1386,17 @@
             } else {
                 nextBtn.textContent = 'Continua';
             }
+         adjustStepsSpacing();
         }
+// Aumenta lo spazio sotto le pilloline su mobile dallo step 2 in poi
+function adjustStepsSpacing() {
+  const stepsWrap = document.getElementById('wizard-steps');
+  if (!stepsWrap) return;
 
+  const isMobile = window.matchMedia('(max-width: 639.98px)').matches; // < sm
+  // Su mobile e dallo step 2 in poi -> 1.5rem (24px). Altrimenti lascia Tailwind (mb-4)
+  stepsWrap.style.marginBottom = (isMobile && currentStep >= 2) ? '1.5rem' : '';
+}
         function nextStep() {
             if (validateCurrentStep()) {
                 if (currentStep < 4) {
@@ -1952,6 +1960,7 @@ document.addEventListener('DOMContentLoaded', () => {
 }
     if (nextBtn)  nextBtn.addEventListener('click', nextStep);
     if (prevBtn)  prevBtn.addEventListener('click', prevStep);
+   window.addEventListener('resize', adjustStepsSpacing);
 
   // Initialize Element SDK (protetto)
     try {
