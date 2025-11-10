@@ -1234,76 +1234,23 @@
 </script>
   
   <script>
-        // Configuration object
-        const defaultConfig = {
-            site_title: "Dalla Scuola alla Pista",
-            hero_title: "FMI Open Days",
-            hero_subtitle: "Vivi la pista con le moto ufficiali del CIV Junior",
-            primary_cta: "ISCRIVITI SUBITO",
-            secondary_cta: "SCOPRI I PROGRAMMI",
-            background_color: "#000000",
-            surface_color: "#003762",
-            text_color: "#ffffff",
-            primary_action_color: "#b1a96a",
-            secondary_action_color: "#003762",
-            font_family: "Inter",
-            font_size: 16
-        };
+let currentStep = 1;
+let registrationData = {};
 
-        // Global state
-        let currentStep = 1;
-        let registrationData = {};
-        let currentRecordCount = 0;
+// --- Navigazione pagine ---
 
-        // Data SDK implementation
-        const dataHandler = {
-            onDataChanged(data) {
-                currentRecordCount = data.length;
-                console.log(`Current registrations: ${currentRecordCount}`);
-                
-                // Update any UI elements that show registration counts
-                updateRegistrationCounts(data);
-            }
-        };
-
-        function updateRegistrationCounts(data) {
-            // This would update various UI elements showing registration statistics
-            // For now, just log the data
-            console.log('Registration data updated:', data);
-        }
-
-        // Initialize Data SDK
-        async function initializeDataSDK() {
-            if (window.dataSdk) {
-                const initResult = await window.dataSdk.init(dataHandler);
-                if (!initResult.isOk) {
-                    console.error("Failed to initialize data SDK:", initResult.error);
-                }
-            }
-        }
-
-                // Navigation functionality
-       function showPage(pageId) {
-  // Nascondi tutte le sezioni
+function showPage(pageId) {
   const pages = document.querySelectorAll('.page-content');
   pages.forEach(p => p.classList.add('hidden'));
 
-  // Trova la sezione target
   const expectedId = `page-${pageId}`;
   let target = document.getElementById(expectedId);
-
-  // Fallback: se non esiste, vai in home e logga
   if (!target) {
-    console.error(`Sezione non trovata: #${expectedId} — verifica l'ID nel markup`);
+    console.error(`Sezione non trovata: #${expectedId}`);
     target = document.getElementById('page-home');
   }
+  if (target) target.classList.remove('hidden');
 
-  // Mostra la sezione
-  if (target) {
-    target.classList.remove('hidden');
-  }
-
-  // Aggiorna stato navbar
   document.querySelectorAll('.nav-link').forEach(link => {
     link.classList.remove('active');
     if (link.dataset.page === pageId) {
@@ -1311,282 +1258,262 @@
     }
   });
 
-  // Sblocca sempre lo scroll
   document.body.style.overflow = '';
 }
 
-        // Registration wizard functionality
-        function showRegistrationWizard() {
-            const modal = document.getElementById('registration-wizard');
-            modal.classList.remove('hidden');
-            modal.classList.add('flex');
-            // blocca lo scroll del body mentre il modal è aperto
-            document.body.style.overflow = 'hidden';
+// --- Wizard iscrizione ---
 
-            currentStep = 1;
-            updateWizardStep();
-        }
-
-        function hideRegistrationWizard() {
+function showRegistrationWizard() {
   const modal = document.getElementById('registration-wizard');
+  if (!modal) return;
 
-  // disabilita temporaneamente gli eventi sul modal
+  modal.classList.remove('hidden');
+  modal.classList.add('flex');
+  document.body.style.overflow = 'hidden';
+
+  currentStep = 1;
+  registrationData = {};
+  updateWizardStep();
+}
+
+function hideRegistrationWizard() {
+  const modal = document.getElementById('registration-wizard');
+  if (!modal) return;
+
   modal.style.pointerEvents = 'none';
-
   modal.classList.add('hidden');
   modal.classList.remove('flex');
   document.body.style.overflow = '';
 
-  // riabilita al frame successivo
   requestAnimationFrame(() => { modal.style.pointerEvents = ''; });
-
   resetWizard();
 }
 
-        function resetWizard() {
-            currentStep = 1;
-            registrationData = {};
-            updateWizardStep();
-            
-            // Reset all forms
-            document.querySelectorAll('#registration-wizard form').forEach(form => {
-                form.reset();
-            });
-            
-            // Hide success message
-            document.getElementById('registration-success').classList.add('hidden');
-        }
+function resetWizard() {
+  currentStep = 1;
+  registrationData = {};
+  updateWizardStep();
 
-        function updateWizardStep() {
-            // Update step indicators
-            document.querySelectorAll('.wizard-step').forEach((step, index) => {
-                step.classList.remove('active', 'completed');
-                if (index + 1 === currentStep) {
-                    step.classList.add('active');
-                } else if (index + 1 < currentStep) {
-                    step.classList.add('completed');
-                }
-            });
-            
-            // Show/hide content
-            document.querySelectorAll('.wizard-content').forEach((content, index) => {
-                if (index + 1 === currentStep) {
-                    content.classList.remove('hidden');
-                } else {
-                    content.classList.add('hidden');
-                }
-            });
-            
-            // Update navigation buttons
-            const prevBtn = document.getElementById('prev-step');
-            const nextBtn = document.getElementById('next-step');
-            
-            if (currentStep === 1) {
-                prevBtn.classList.add('hidden');
-            } else {
-                prevBtn.classList.remove('hidden');
-            }
-            
-            if (currentStep === 4) {
-                nextBtn.textContent = 'Conferma Iscrizione';
-            } else {
-                nextBtn.textContent = 'Continua';
-            }
-         adjustStepsSpacing();
-        }
-// Aumenta lo spazio sotto le pilloline su mobile dallo step 2 in poi
+  document.querySelectorAll('#registration-wizard form').forEach(form => form.reset());
+  const success = document.getElementById('registration-success');
+  const summary = document.getElementById('registration-summary');
+  if (success) success.classList.add('hidden');
+  if (summary) summary.classList.remove('hidden');
+}
+
+function updateWizardStep() {
+  const steps = document.querySelectorAll('.wizard-step');
+  steps.forEach((step, index) => {
+    step.classList.remove('active', 'completed');
+    if (index + 1 === currentStep) step.classList.add('active');
+    else if (index + 1 < currentStep) step.classList.add('completed');
+  });
+
+  const contents = document.querySelectorAll('.wizard-content');
+  contents.forEach((content, index) => {
+    if (index + 1 === currentStep) content.classList.remove('hidden');
+    else content.classList.add('hidden');
+  });
+
+  const prevBtn = document.getElementById('prev-step');
+  const nextBtn = document.getElementById('next-step');
+
+  if (prevBtn) {
+    if (currentStep === 1) prevBtn.classList.add('hidden');
+    else prevBtn.classList.remove('hidden');
+  }
+
+  if (nextBtn) {
+    nextBtn.textContent = (currentStep === 4) ? 'Conferma Iscrizione' : 'Continua';
+  }
+
+  adjustStepsSpacing();
+}
+
 function adjustStepsSpacing() {
   const stepsWrap = document.getElementById('wizard-steps');
   if (!stepsWrap) return;
-
-  const isMobile = window.matchMedia('(max-width: 639.98px)').matches; // < sm
-  // Su mobile e dallo step 2 in poi -> 1.5rem (24px). Altrimenti lascia Tailwind (mb-4)
+  const isMobile = window.matchMedia('(max-width: 639.98px)').matches;
   stepsWrap.style.marginBottom = (isMobile && currentStep >= 2) ? '1.5rem' : '';
 }
-        function nextStep() {
-            if (validateCurrentStep()) {
-                if (currentStep < 4) {
-                    currentStep++;
-                    updateWizardStep();
-                    
-                    // Special handling for step transitions
-                    if (currentStep === 4) {
-                        generateSummary();
-                    }
-                } else {
-                    submitRegistration();
-                }
-            }
-        }
 
-        function prevStep() {
-            if (currentStep > 1) {
-                currentStep--;
-                updateWizardStep();
-            }
-        }
+function nextStep() {
+  if (!validateCurrentStep()) return;
 
-        function validateCurrentStep() {
-            const currentContent = document.getElementById(`step-${currentStep}`);
-            const requiredFields = currentContent.querySelectorAll('[required]');
-            
-            for (let field of requiredFields) {
-                if (!field.value.trim()) {
-                    field.focus();
-                    showToast('Compila tutti i campi obbligatori', 'error');
-                    return false;
-                }
-            }
-            
-            // Special validations
-            if (currentStep === 1) {
-                const birthDate = new Date(document.getElementById('data-nascita').value);
-                const age = calculateAge(birthDate);
-                const isMinor = age < 18;
-                
-                // Show/hide minor section
-                const minorSection = document.getElementById('minorenne-section');
-                if (isMinor) {
-                    minorSection.classList.remove('hidden');
-                    const parentConsent = document.getElementById('consenso-genitore');
-                    if (!parentConsent.checked) {
-                        showToast('È necessario il consenso del genitore/tutore', 'error');
-                        return false;
-                    }
-                } else {
-                    minorSection.classList.add('hidden');
-                }
-                
-                registrationData.minorenne = isMinor;
-            }
-            
-            if (currentStep === 2) {
-                const tappa = document.querySelector('input[name="tappa"]:checked');
-                
-                if (!tappa) {
-                    showToast('Seleziona una tappa', 'error');
-                    return false;
-                }
-                
-                registrationData.tappa = tappa.value;
-                registrationData.programma = 'open-day'; // Always Open Day now
-            }
-            
-            return true;
-        }
+  if (currentStep < 4) {
+    currentStep++;
+    updateWizardStep();
+    if (currentStep === 4) generateSummary();
+  } else {
+    submitRegistration();
+  }
+}
 
-        function calculateAge(birthDate) {
-            const today = new Date();
-            let age = today.getFullYear() - birthDate.getFullYear();
-            const monthDiff = today.getMonth() - birthDate.getMonth();
-            
-            if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
-                age--;
-            }
-            
-            return age;
-        }
+function prevStep() {
+  if (currentStep > 1) {
+    currentStep--;
+    updateWizardStep();
+  }
+}
 
-        function generateSummary() {
-            const summaryContainer = document.getElementById('registration-summary');
-            
-            // Collect all form data
-            const formData = new FormData();
-            document.querySelectorAll('#registration-wizard input, #registration-wizard select').forEach(input => {
-                if (input.type === 'checkbox' || input.type === 'radio') {
-                    if (input.checked) {
-                        formData.append(input.name, input.value || 'true');
-                    }
-                } else if (input.value) {
-                    formData.append(input.name, input.value);
-                }
-            });
-            
-            // Generate summary HTML
-            let summaryHTML = `
-                <div class="bg-white border border-gray-200 rounded-lg p-6">
-                    <h4 class="font-semibold text-gray-900 mb-4">Dati Personali</h4>
-                    <div class="grid md:grid-cols-2 gap-4 text-sm">
-                        <div><strong>Nome:</strong> ${formData.get('nome')} ${formData.get('cognome')}</div>
-                        <div><strong>Data di nascita:</strong> ${formData.get('data-nascita')}</div>
-                        <div><strong>Email:</strong> ${formData.get('email')}</div>
-                        <div><strong>Telefono:</strong> ${formData.get('telefono')}</div>
-                        <div><strong>Provincia:</strong> ${formData.get('provincia')}</div>
-                    </div>
-                </div>
-                
-                <div class="bg-white border border-gray-200 rounded-lg p-6">
-                    <h4 class="font-semibold text-gray-900 mb-4">Tappa Selezionata</h4>
-                    <div class="text-sm space-y-2">
-                        <div><strong>Programma:</strong> FMI Open Days</div>
-                        <div><strong>Tappa:</strong> ${getTappaName(formData.get('tappa'))}</div>
-                        <div><strong>Esperienza:</strong> ${getExperienceLabel(formData.get('esperienza'))}</div>
-                        <div><strong>Licenza FMI 2025:</strong> ${getLicenseLabel(formData.get('licenza-fmi')) || 'Non specificato'}</div>
-                    </div>
-                </div>
-                
-                <div class="bg-blue-50 border border-blue-200 rounded-lg p-6">
-                    <h4 class="font-semibold text-blue-900 mb-2">Stato Iscrizione</h4>
-                    <div class="flex items-center space-x-2">
-                        <span class="status-badge bg-yellow-100 text-yellow-800">
-                            <span class="w-2 h-2 bg-yellow-500 rounded-full"></span>
-                            In Verifica
-                        </span>
-                    </div>
-                    <p class="text-blue-800 text-sm mt-2">La tua iscrizione sarà verificata dal nostro team entro 24 ore.</p>
-                </div>
-            `;
-            
-            summaryContainer.innerHTML = summaryHTML;
-        }
+function validateCurrentStep() {
+  const currentContent = document.getElementById(`step-${currentStep}`);
+  if (!currentContent) return true;
 
-        function getTappaName(tappa) {
-            const names = {
-                'vallelunga': 'Tappa 1 - Vallelunga (13 ottobre 2025)',
-                'ottobiano': 'Tappa 2 - Ottobiano (27 ottobre 2025)'
-            };
-            return names[tappa] || tappa;
-        }
+  const requiredFields = currentContent.querySelectorAll('[required]');
+  for (let field of requiredFields) {
+    if (!field.value || !field.value.trim()) {
+      field.focus();
+      showToast('Compila tutti i campi obbligatori', 'error');
+      return false;
+    }
+  }
 
-        function getExperienceLabel(exp) {
-            const labels = {
-                'mai-in-pista': 'Mai stato in pista',
-                'poche-uscite': 'Poche uscite in pista',
-                'esperto': 'Esperto'
-            };
-            return labels[exp] || exp;
-        }
+  if (currentStep === 1) {
+    const dobInput = document.getElementById('data-nascita');
+    if (dobInput && dobInput.value) {
+      const birthDate = new Date(dobInput.value);
+      const age = calculateAge(birthDate);
+      const minorSection = document.getElementById('minorenne-section');
+      const parentConsent = document.getElementById('consenso-genitore');
 
-        function getLicenseLabel(license) {
-            const labels = {
-                'no': 'No',
-                'si': 'Sì',
-                'non-so': 'Non so'
-            };
-            return labels[license] || license;
+      if (age < 18) {
+        if (minorSection) minorSection.classList.remove('hidden');
+        if (!parentConsent || !parentConsent.checked) {
+          showToast('È necessario il consenso del genitore/tutore', 'error');
+          return false;
         }
+        registrationData.minorenne = true;
+      } else {
+        if (minorSection) minorSection.classList.add('hidden');
+        registrationData.minorenne = false;
+      }
+    }
+  }
 
-      async function submitRegistration() {
+  if (currentStep === 2) {
+    const tappa = document.querySelector('input[name="tappa"]:checked');
+    if (!tappa) {
+      showToast('Seleziona una tappa', 'error');
+      return false;
+    }
+    registrationData.tappa = tappa.value;
+    registrationData.programma = 'open-day';
+  }
+
+  return true;
+}
+
+function calculateAge(birthDate) {
+  if (!(birthDate instanceof Date) || isNaN(birthDate)) return 0;
+  const today = new Date();
+  let age = today.getFullYear() - birthDate.getFullYear();
+  const m = today.getMonth() - birthDate.getMonth();
+  if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) age--;
+  return age;
+}
+
+function generateSummary() {
+  const summaryContainer = document.getElementById('registration-summary');
+  if (!summaryContainer) return;
+
+  const formData = new FormData();
+  document.querySelectorAll('#registration-wizard input, #registration-wizard select')
+    .forEach(input => {
+      if (input.type === 'checkbox' || input.type === 'radio') {
+        if (input.checked) formData.append(input.name, input.value || 'true');
+      } else if (input.value) {
+        formData.append(input.name, input.value);
+      }
+    });
+
+  const html = `
+    <div class="bg-white border border-gray-200 rounded-lg p-6 mb-4">
+      <h4 class="font-semibold text-gray-900 mb-4">Dati Personali</h4>
+      <div class="grid md:grid-cols-2 gap-4 text-sm">
+        <div><strong>Nome:</strong> ${formData.get('nome') || ''} ${formData.get('cognome') || ''}</div>
+        <div><strong>Data di nascita:</strong> ${formData.get('data-nascita') || ''}</div>
+        <div><strong>Email:</strong> ${formData.get('email') || ''}</div>
+        <div><strong>Telefono:</strong> ${formData.get('telefono') || ''}</div>
+        <div><strong>Provincia:</strong> ${formData.get('provincia') || ''}</div>
+      </div>
+    </div>
+    <div class="bg-white border border-gray-200 rounded-lg p-6 mb-4">
+      <h4 class="font-semibold text-gray-900 mb-4">Tappa Selezionata</h4>
+      <div class="text-sm space-y-2">
+        <div><strong>Programma:</strong> FMI Open Days</div>
+        <div><strong>Tappa:</strong> ${getTappaName(formData.get('tappa'))}</div>
+        <div><strong>Esperienza:</strong> ${getExperienceLabel(formData.get('esperienza'))}</div>
+        <div><strong>Licenza FMI 2025:</strong> ${getLicenseLabel(formData.get('licenza-fmi')) || 'Non specificato'}</div>
+      </div>
+    </div>
+    <div class="bg-blue-50 border border-blue-200 rounded-lg p-6">
+      <h4 class="font-semibold text-blue-900 mb-2">Stato Iscrizione</h4>
+      <span class="status-badge bg-yellow-100 text-yellow-800">
+        <span class="w-2 h-2 bg-yellow-500 rounded-full"></span>
+        In Verifica
+      </span>
+      <p class="text-blue-800 text-sm mt-2">
+        La tua iscrizione sarà verificata dal nostro team entro 24 ore.
+      </p>
+    </div>
+  `;
+
+  summaryContainer.innerHTML = html;
+}
+
+function getTappaName(tappa) {
+  const map = {
+    vallelunga: 'Tappa 1 - Vallelunga (13 ottobre 2025)',
+    ottobiano: 'Tappa 2 - Ottobiano (27 ottobre 2025)'
+  };
+  return map[tappa] || (tappa || '');
+}
+
+function getExperienceLabel(exp) {
+  const map = {
+    'mai-in-pista': 'Mai stato in pista',
+    'poche-uscite': 'Poche uscite in pista',
+    'esperto': 'Esperto'
+  };
+  return map[exp] || (exp || '');
+}
+
+function getLicenseLabel(license) {
+  const map = {
+    'no': 'No',
+    'si': 'Sì',
+    'non-so': 'Non so'
+  };
+  return map[license] || (license || '');
+}
+
+// --- Invio iscrizione ---
+
+async function submitRegistration() {
   const nextBtn = document.getElementById('next-step');
+  const summary = document.getElementById('registration-summary');
+  const success = document.getElementById('registration-success');
+  if (!nextBtn) return;
+
   const originalText = nextBtn.textContent;
   nextBtn.textContent = 'Invio in corso...';
   nextBtn.disabled = true;
 
   try {
-    // Raccogli campi dal wizard
     const formRoot = document.getElementById('registration-wizard');
     const inputs = formRoot.querySelectorAll('input, select');
 
     const raw = {};
     inputs.forEach(el => {
+      if (!el.name) return;
       if (el.type === 'checkbox' || el.type === 'radio') {
-        if (el.checked) raw[el.name] = el.value || true;
+        if (el.checked) raw[el.name] = el.value || 'true';
       } else if (el.value) {
         raw[el.name] = el.value;
       }
     });
 
-    // Payload (URLSearchParams) — coerente con lo script lato server
     const params = new URLSearchParams({
       id: generateId(),
       nome: raw['nome'] || '',
@@ -1615,289 +1542,117 @@ function adjustStepsSpacing() {
     });
 
     const endpoint = (typeof GS_ENDPOINT !== 'undefined' && GS_ENDPOINT) || window.GS_ENDPOINT;
-const resp = await fetch(endpoint, {
+    if (!endpoint) throw new Error('Endpoint Google Script non configurato');
+
+    const resp = await fetch(endpoint, {
       method: 'POST',
       headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
       body: params.toString()
     });
 
-    if (!resp.ok) {
-      throw new Error('HTTP ' + resp.status + ' durante l’invio');
-    }
-
-    // Risposta JSON dal server
+    if (!resp.ok) throw new Error('HTTP ' + resp.status);
     const json = await resp.json();
-    if (!json.ok) {
-      throw new Error(json.error || 'Errore lato Apps Script');
-    }
+    if (!json.ok) throw new Error(json.error || 'Errore lato Apps Script');
 
-    // Success UI
-    document.getElementById('registration-summary').classList.add('hidden');
-    document.getElementById('registration-success').classList.remove('hidden');
+    if (summary) summary.classList.add('hidden');
+    if (success) success.classList.remove('hidden');
     showToast('Iscrizione inviata!', 'success');
 
   } catch (err) {
     console.error('Registration error:', err);
-    showToast('Errore durante l’invio. ' + String(err.message || err), 'error');
-
+    showToast('Errore durante l’invio: ' + (err.message || err), 'error');
     nextBtn.textContent = originalText;
     nextBtn.disabled = false;
     return;
   }
 }
 
-        function generateId() {
-            return 'reg_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
-        }
+function generateId() {
+  return 'reg_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+}
 
-        function showToast(message, type = 'info') {
-            // Create toast element
-            const toast = document.createElement('div');
-            toast.className = `fixed top-4 right-4 z-50 px-6 py-3 rounded-lg shadow-lg text-white font-medium ${
-                type === 'success' ? 'bg-green-600' : 
-                type === 'error' ? 'bg-red-600' : 
-                'bg-blue-600'
-            }`;
-            toast.textContent = message;
-            
-            document.body.appendChild(toast);
-            
-            // Remove after 3 seconds
-            setTimeout(() => {
-                toast.remove();
-            }, 3000);
-        }
+// --- Toast ---
 
-        // FAQ functionality
-        function initializeFAQ() {
-            document.querySelectorAll('.faq-toggle').forEach(toggle => {
-                toggle.addEventListener('click', () => {
-                    const content = toggle.nextElementSibling;
-                    const icon = toggle.querySelector('svg');
-                    
-                    if (content.classList.contains('hidden')) {
-                        content.classList.remove('hidden');
-                        icon.style.transform = 'rotate(180deg)';
-                    } else {
-                        content.classList.add('hidden');
-                        icon.style.transform = 'rotate(0deg)';
-                    }
-                });
-            });
-        }
+function showToast(message, type = 'info') {
+  const toast = document.createElement('div');
+  toast.className = `fixed top-4 right-4 z-50 px-6 py-3 rounded-lg shadow-lg text-white font-medium ${
+    type === 'success' ? 'bg-green-600' :
+    type === 'error' ? 'bg-red-600' :
+    'bg-blue-600'
+  }`;
+  toast.textContent = message;
+  document.body.appendChild(toast);
+  setTimeout(() => toast.remove(), 3000);
+}
 
-        // Form interactions
-        function initializeFormInteractions() {
-            // Tappa card selection
-            document.querySelectorAll('.tappa-card').forEach(card => {
-                card.addEventListener('click', () => {
-                    document.querySelectorAll('.tappa-card').forEach(c => c.classList.remove('border-red-500'));
-                    card.classList.add('border-red-500');
-                    
-                    const radio = card.querySelector('input[type="radio"]');
-                    radio.checked = true;
-                    
-                    // Always show moto selection for Open Days
-                    const motoSelection = document.getElementById('moto-selection');
-                    motoSelection.classList.remove('hidden');
-                });
-            });
-            
-            // Moto card selection
-            document.querySelectorAll('.moto-card').forEach(card => {
-                card.addEventListener('click', () => {
-                    document.querySelectorAll('.moto-card').forEach(c => c.classList.remove('border-red-500'));
-                    card.classList.add('border-red-500');
-                    
-                    const radio = card.querySelector('input[type="radio"]');
-                    radio.checked = true;
-                });
-            });
-            
-            // Equipment checkbox
-            document.getElementById('equipaggiamento').addEventListener('change', (e) => {
-                const sizesSection = document.getElementById('equipment-sizes');
-                if (e.target.checked) {
-                    sizesSection.classList.remove('hidden');
-                } else {
-                    sizesSection.classList.add('hidden');
-                }
-            });
-            
+// --- FAQ & form interactions ---
 
-            
-            // Age calculation for minor section
-            document.getElementById('data-nascita').addEventListener('change', (e) => {
-                const birthDate = new Date(e.target.value);
-                const age = calculateAge(birthDate);
-                const minorSection = document.getElementById('minorenne-section');
-                
-                if (age < 18) {
-                    minorSection.classList.remove('hidden');
-                } else {
-                    minorSection.classList.add('hidden');
-                }
-            });
-        }
+function initializeFAQ() {
+  document.querySelectorAll('.faq-toggle').forEach(toggle => {
+    toggle.addEventListener('click', () => {
+      const content = toggle.nextElementSibling;
+      const icon = toggle.querySelector('svg');
+      const isHidden = content.classList.contains('hidden');
+      document.querySelectorAll('.faq-content').forEach(c => c.classList.add('hidden'));
+      document.querySelectorAll('.faq-toggle svg').forEach(i => i.style.transform = 'rotate(0deg)');
+      if (isHidden) {
+        content.classList.remove('hidden');
+        if (icon) icon.style.transform = 'rotate(180deg)';
+      }
+    });
+  });
+}
 
-        // Element SDK implementation
-        async function onConfigChange(config) {
-            const customFont = config.font_family || defaultConfig.font_family;
-            const baseSize = config.font_size || defaultConfig.font_size;
-            const baseFontStack = 'system-ui, -apple-system, sans-serif';
+function initializeFormInteractions() {
+  document.querySelectorAll('.tappa-card').forEach(card => {
+    card.addEventListener('click', () => {
+      document.querySelectorAll('.tappa-card').forEach(c => c.classList.remove('border-red-500'));
+      card.classList.add('border-red-500');
+      const radio = card.querySelector('input[type="radio"]');
+      if (radio) radio.checked = true;
+      const motoSelection = document.getElementById('moto-selection');
+      if (motoSelection) motoSelection.classList.remove('hidden');
+    });
+  });
 
-            // Update text content
-            // Update text content (safe checks)
-const siteTitleEl    = document.getElementById('site-title');
-const heroTitleEl    = document.getElementById('hero-title');
-const heroSubEl      = document.getElementById('hero-subtitle');
-const primaryCtaEl   = document.getElementById('primary-cta');
-const secondaryCtaEl = document.getElementById('secondary-cta');
+  document.querySelectorAll('.moto-card').forEach(card => {
+    card.addEventListener('click', () => {
+      document.querySelectorAll('.moto-card').forEach(c => c.classList.remove('border-red-500'));
+      card.classList.add('border-red-500');
+      const radio = card.querySelector('input[type="radio"]');
+      if (radio) radio.checked = true;
+    });
+  });
 
-if (siteTitleEl)    siteTitleEl.textContent    = config.site_title    || defaultConfig.site_title;
-if (heroTitleEl)    heroTitleEl.textContent    = config.hero_title    || defaultConfig.hero_title;
-if (heroSubEl)      heroSubEl.textContent      = config.hero_subtitle || defaultConfig.hero_subtitle;
-if (primaryCtaEl)   primaryCtaEl.textContent   = config.primary_cta   || defaultConfig.primary_cta;
-if (secondaryCtaEl) secondaryCtaEl.textContent = config.secondary_cta || defaultConfig.secondary_cta;
+  const eq = document.getElementById('equipaggiamento');
+  if (eq) {
+    eq.addEventListener('change', (e) => {
+      const sizes = document.getElementById('equipment-sizes');
+      if (!sizes) return;
+      if (e.target.checked) sizes.classList.remove('hidden');
+      else sizes.classList.add('hidden');
+    });
+  }
 
-            // Update colors
-            const backgroundColor = config.background_color || defaultConfig.background_color;
-            const surfaceColor = config.surface_color || defaultConfig.surface_color;
-            const textColor = config.text_color || defaultConfig.text_color;
-            const primaryActionColor = config.primary_action_color || defaultConfig.primary_action_color;
-            const secondaryActionColor = config.secondary_action_color || defaultConfig.secondary_action_color;
+  const dob = document.getElementById('data-nascita');
+  if (dob) {
+    dob.addEventListener('change', (e) => {
+      const birthDate = new Date(e.target.value);
+      const age = calculateAge(birthDate);
+      const minorSection = document.getElementById('minorenne-section');
+      if (!minorSection) return;
+      if (age < 18) minorSection.classList.remove('hidden');
+      else minorSection.classList.add('hidden');
+    });
+  }
+}
 
-            // Apply background color to hero gradient
-            document.querySelectorAll('.racing-gradient').forEach(el => {
-                el.style.background = `linear-gradient(135deg, ${backgroundColor} 0%, ${primaryActionColor} 30%, ${secondaryActionColor} 70%, #000000 100%)`;
-            });
+// --- Init globale ---
 
-            // Apply surface color to cards
-            document.querySelectorAll('.floating-card, .event-card').forEach(card => {
-                card.style.backgroundColor = surfaceColor;
-            });
-
-            // Apply text color
-            document.querySelectorAll('.floating-card h3, .floating-card p, .event-card h3, .event-card p').forEach(el => {
-                el.style.color = textColor;
-            });
-
-            // Apply primary action color to buttons
-            document.querySelectorAll('.btn-primary').forEach(btn => {
-                btn.style.background = `linear-gradient(135deg, ${primaryActionColor}, ${primaryActionColor}dd)`;
-            });
-
-            // Apply fonts with proportional scaling
-            const titleElements = [document.getElementById('hero-title')];
-            const subtitleElements = [document.getElementById('hero-subtitle')];
-            const brandElements = [document.getElementById('site-title')];
-            const buttonElements = [document.getElementById('primary-cta'), document.getElementById('secondary-cta')];
-
-            titleElements.forEach(el => {
-                el.style.fontFamily = `${customFont}, ${baseFontStack}`;
-                el.style.fontSize = `${baseSize * 3.5}px`;
-            });
-
-            subtitleElements.forEach(el => {
-                el.style.fontFamily = `${customFont}, ${baseFontStack}`;
-                el.style.fontSize = `${baseSize * 1.4}px`;
-            });
-
-            brandElements.forEach(el => {
-                el.style.fontFamily = `${customFont}, ${baseFontStack}`;
-                el.style.fontSize = `${baseSize * 1.25}px`;
-            });
-
-            buttonElements.forEach(el => {
-                el.style.fontFamily = `${customFont}, ${baseFontStack}`;
-                el.style.fontSize = `${baseSize * 1.1}px`;
-            });
-        }
-
-        function mapToCapabilities(config) {
-            return {
-                recolorables: [
-                    {
-                        get: () => config.background_color || defaultConfig.background_color,
-                        set: (value) => {
-                            if (window.elementSdk) {
-                                window.elementSdk.setConfig({ background_color: value });
-                            }
-                        }
-                    },
-                    {
-                        get: () => config.surface_color || defaultConfig.surface_color,
-                        set: (value) => {
-                            if (window.elementSdk) {
-                                window.elementSdk.setConfig({ surface_color: value });
-                            }
-                        }
-                    },
-                    {
-                        get: () => config.text_color || defaultConfig.text_color,
-                        set: (value) => {
-                            if (window.elementSdk) {
-                                window.elementSdk.setConfig({ text_color: value });
-                            }
-                        }
-                    },
-                    {
-                        get: () => config.primary_action_color || defaultConfig.primary_action_color,
-                        set: (value) => {
-                            if (window.elementSdk) {
-                                window.elementSdk.setConfig({ primary_action_color: value });
-                            }
-                        }
-                    },
-                    {
-                        get: () => config.secondary_action_color || defaultConfig.secondary_action_color,
-                        set: (value) => {
-                            if (window.elementSdk) {
-                                window.elementSdk.setConfig({ secondary_action_color: value });
-                            }
-                        }
-                    }
-                ],
-                borderables: [],
-                fontEditable: {
-                    get: () => config.font_family || defaultConfig.font_family,
-                    set: (value) => {
-                        if (window.elementSdk) {
-                            window.elementSdk.setConfig({ font_family: value });
-                        }
-                    }
-                },
-                fontSizeable: {
-                    get: () => config.font_size || defaultConfig.font_size,
-                    set: (value) => {
-                        if (window.elementSdk) {
-                            window.elementSdk.setConfig({ font_size: value });
-                        }
-                    }
-                }
-            };
-        }
-
-        function mapToEditPanelValues(config) {
-            return new Map([
-                ["site_title", config.site_title || defaultConfig.site_title],
-                ["hero_title", config.hero_title || defaultConfig.hero_title],
-                ["hero_subtitle", config.hero_subtitle || defaultConfig.hero_subtitle],
-                ["primary_cta", config.primary_cta || defaultConfig.primary_cta],
-                ["secondary_cta", config.secondary_cta || defaultConfig.secondary_cta]
-            ]);
-        }
-
-        // Event listeners
 document.addEventListener('DOMContentLoaded', () => {
+  initializeFAQ();
+  initializeFormInteractions();
 
-  // FAQ (protetto)
-  try { initializeFAQ(); } catch (e) { console.warn('FAQ init skipped:', e); }
-
-  // Form interactions (protetto)
-  try { initializeFormInteractions(); } catch (e) { console.warn('Form interactions init skipped:', e); }
-
-  // Navigation desktop (null-safe)
   document.querySelectorAll('.nav-link').forEach(link => {
     link.addEventListener('click', (e) => {
       e.preventDefault();
@@ -1906,107 +1661,63 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // Inizializza lo stato: mostra sempre la Home all'avvio
+  const primaryCta   = document.getElementById('primary-cta');
+  const secondaryCta = document.getElementById('secondary-cta');
+  const navIscriviti = document.getElementById('nav-iscriviti');
+  const mobileIscr   = document.getElementById('mobile-iscriviti');
+
+  if (primaryCta)   primaryCta.addEventListener('click', e => { e.preventDefault(); showRegistrationWizard(); });
+  if (secondaryCta) secondaryCta.addEventListener('click', e => { e.preventDefault(); showPage('calendar'); });
+  if (navIscriviti) navIscriviti.addEventListener('click', e => { e.preventDefault(); showRegistrationWizard(); });
+  if (mobileIscr)   mobileIscr.addEventListener('click', e => { e.preventDefault(); showRegistrationWizard(); });
+
+  const closeBtn = document.getElementById('close-wizard');
+  const nextBtn  = document.getElementById('next-step');
+  const prevBtn  = document.getElementById('prev-step');
+  if (closeBtn) closeBtn.addEventListener('click', (e) => { e.preventDefault(); e.stopPropagation(); hideRegistrationWizard(); });
+  if (nextBtn)  nextBtn.addEventListener('click', nextStep);
+  if (prevBtn)  prevBtn.addEventListener('click', prevStep);
+
+  const mobileMenu = document.getElementById('mobile-menu');
+  const toggleBtn  = document.getElementById('mobile-menu-btn');
+  const bodyEl     = document.body;
+
+  if (mobileMenu && toggleBtn) {
+    const mobileLinks = document.querySelectorAll('#mobile-menu a, #mobile-menu button');
+
+    toggleBtn.addEventListener('click', () => {
+      mobileMenu.classList.toggle('hidden');
+      if (mobileMenu.classList.contains('hidden')) bodyEl.style.overflow = '';
+      else bodyEl.style.overflow = 'hidden';
+      const expanded = toggleBtn.getAttribute('aria-expanded') === 'true';
+      toggleBtn.setAttribute('aria-expanded', String(!expanded));
+    });
+
+    mobileLinks.forEach(el => {
+      el.addEventListener('click', () => {
+        mobileMenu.classList.add('hidden');
+        bodyEl.style.overflow = '';
+        toggleBtn.setAttribute('aria-expanded', 'false');
+      });
+    });
+
+    document.addEventListener('click', (e) => {
+      const isOpen = !mobileMenu.classList.contains('hidden');
+      if (!isOpen) return;
+      const clickInside = mobileMenu.contains(e.target);
+      const clickOnBtn = toggleBtn.contains(e.target);
+      if (!clickInside && !clickOnBtn) {
+        mobileMenu.classList.add('hidden');
+        bodyEl.style.overflow = '';
+        toggleBtn.setAttribute('aria-expanded', 'false');
+      }
+    });
+  }
+
   showPage('home');
-});
-
-    // CTA buttons (null-safe)
-  const primaryCta   = document.getElementById("primary-cta");
-  const secondaryCta = document.getElementById("secondary-cta");
-  const navIscriviti = document.getElementById("nav-iscriviti");
-  const mobileIscr   = document.getElementById("mobile-iscriviti");
-
-  // Bottone principale in home
-  if (primaryCta) {
-    primaryCta.addEventListener("click", (e) => {
-      e.preventDefault();
-      showRegistrationWizard();
-    });
-  }
-
-  // Secondario porta al calendario
-  if (secondaryCta) {
-    secondaryCta.addEventListener("click", (e) => {
-      e.preventDefault();
-      showPage("calendar");
-    });
-  }
-
-  // ISCRIVITI nella navbar: funziona da qualsiasi pagina
-  if (navIscriviti) {
-    navIscriviti.addEventListener("click", (e) => {
-      e.preventDefault();
-      showRegistrationWizard();
-    });
-  }
-
-  // ISCRIVITI nel menu mobile (se esiste)
-  if (mobileIscr) {
-    mobileIscr.addEventListener("click", (e) => {
-      e.preventDefault();
-      showRegistrationWizard();
-    });
-  }
-
-  // Wizard controls (null-safe)
-    const closeBtn = document.getElementById('close-wizard');
-    const nextBtn  = document.getElementById('next-step');
-    const prevBtn  = document.getElementById('prev-step');
-
-   if (closeBtn) {
-  closeBtn.addEventListener('click', (e) => {
-    e.preventDefault();
-    e.stopPropagation();        // blocca il pass-through del click
-    hideRegistrationWizard();
-  });
-}
-    if (nextBtn)  nextBtn.addEventListener('click', nextStep);
-    if (prevBtn)  prevBtn.addEventListener('click', prevStep);
-   window.addEventListener('resize', adjustStepsSpacing);
-    <script>
-document.addEventListener("DOMContentLoaded", function () {
-  const mobileMenu   = document.getElementById("mobile-menu");
-  const toggleBtn    = document.getElementById("mobile-menu-btn");
-  const navLinks     = document.querySelectorAll("#mobile-menu a, #mobile-menu button");
-  const bodyEl       = document.body;
-
-  if (!mobileMenu || !toggleBtn) return;
-
-  // Apri/chiudi la tendina
-  toggleBtn.addEventListener("click", () => {
-    mobileMenu.classList.toggle("hidden");
-    // lock/unlock scroll sotto la tendina (qualità di vita)
-    if (mobileMenu.classList.contains("hidden")) {
-      bodyEl.style.overflow = "";
-    } else {
-      bodyEl.style.overflow = "hidden";
-    }
-    // accessibilità
-    const expanded = toggleBtn.getAttribute("aria-expanded") === "true";
-    toggleBtn.setAttribute("aria-expanded", String(!expanded));
-  });
-
-  // Chiudi la tendina quando clicchi un link o il bottone ISCRIVITI dentro il menu
-  navLinks.forEach(el => {
-    el.addEventListener("click", () => {
-      mobileMenu.classList.add("hidden");
-      bodyEl.style.overflow = "";
-      toggleBtn.setAttribute("aria-expanded", "false");
-    });
-  });
-
-  // Chiudi se clicchi fuori dal menu (tap su overlay/esterno)
-  document.addEventListener("click", (e) => {
-    const clickInsideMenu = mobileMenu.contains(e.target);
-    const clickOnButton   = toggleBtn.contains(e.target);
-    const isOpen          = !mobileMenu.classList.contains("hidden");
-    if (isOpen && !clickInsideMenu && !clickOnButton) {
-      mobileMenu.classList.add("hidden");
-      bodyEl.style.overflow = "";
-      toggleBtn.setAttribute("aria-expanded", "false");
-    }
-  });
+  adjustStepsSpacing();
+  window.addEventListener('resize', adjustStepsSpacing);
 });
 </script>
-    </body>
+</body>
 </html>
