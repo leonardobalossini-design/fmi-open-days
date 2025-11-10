@@ -1963,21 +1963,6 @@ document.addEventListener('DOMContentLoaded', () => {
     if (nextBtn)  nextBtn.addEventListener('click', nextStep);
     if (prevBtn)  prevBtn.addEventListener('click', prevStep);
    window.addEventListener('resize', adjustStepsSpacing);
-
-  // Initialize Element SDK (protetto)
-    try {
-     if (window.elementSdk) {
-      window.elementSdk.init({
-        defaultConfig,
-        onConfigChange,
-        mapToCapabilities,
-        mapToEditPanelValues
-      });
-    }
-    } catch (e) {
-      console.warn('ElementSDK init skipped:', e);
-    }
-    </script>
     <script>
 document.addEventListener("DOMContentLoaded", function () {
   const mobileMenu   = document.getElementById("mobile-menu");
