@@ -1566,14 +1566,14 @@ function adjustStepsSpacing() {
             return labels[license] || license;
         }
 
-       async function submitRegistration() {
+      async function submitRegistration() {
   const nextBtn = document.getElementById('next-step');
   const originalText = nextBtn.textContent;
   nextBtn.textContent = 'Invio in corso...';
   nextBtn.disabled = true;
 
   try {
-    // Raccogli tutti i campi del wizard
+    // Raccogli campi dal wizard
     const formRoot = document.getElementById('registration-wizard');
     const inputs = formRoot.querySelectorAll('input, select');
 
@@ -1586,7 +1586,7 @@ function adjustStepsSpacing() {
       }
     });
 
-    // Costruisci il payload per Google Sheets
+    // Payload (URLSearchParams) — coerente con lo script lato server
     const params = new URLSearchParams({
       id: generateId(),
       nome: raw['nome'] || '',
@@ -1614,21 +1614,30 @@ function adjustStepsSpacing() {
       timestamp: new Date().toISOString()
     });
 
-    // Manda i dati al Web App di Apps Script
-    await fetch(GS_ENDPOINT, {
+    const resp = await fetch(GS_ENDPOINT, {
       method: 'POST',
-      body: params,
-      mode: 'no-cors' // niente errore CORS, non leggiamo risposta
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
+      body: params.toString()
     });
 
-    // Mostra schermata di successo
+    if (!resp.ok) {
+      throw new Error('HTTP ' + resp.status + ' durante l’invio');
+    }
+
+    // Risposta JSON dal server
+    const json = await resp.json();
+    if (!json.ok) {
+      throw new Error(json.error || 'Errore lato Apps Script');
+    }
+
+    // Success UI
     document.getElementById('registration-summary').classList.add('hidden');
     document.getElementById('registration-success').classList.remove('hidden');
     showToast('Iscrizione inviata!', 'success');
 
   } catch (err) {
     console.error('Registration error:', err);
-    showToast('Errore durante l’invio. Riprova.', 'error');
+    showToast('Errore durante l’invio. ' + String(err.message || err), 'error');
 
     nextBtn.textContent = originalText;
     nextBtn.disabled = false;
