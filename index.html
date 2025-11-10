@@ -1227,10 +1227,12 @@
 
 <!-- FINE REGISTRATION WIZARD -->
   
-  <!-- Endpoint Google Apps Script -->
+ <!-- Endpoint Google Apps Script (PROD) -->
 <script>
-  // URL del tuo Web App (Deployment → Applicazione web → URL, termina con /exec)
-  const GS_ENDPOINT = https://script.google.com/macros/s/AKfycbyzLJomgZUq1GF5bn4iszYOb4ehVwbCrUSS445YVW58doTOyRwbeDXvm0v8InIzN5f7CA/exec;
+  // URL pubblicato (termina con /exec)
+  window.GS_ENDPOINT = 'https://script.google.com/macros/s/AKfycbyzLJomgZUq1GF5bn4iszYOb4ehVwbCrUSS445YVW58doTOyRwbeDXvm0v8InIzN5f7CA/exec';
+  // Fallback per codice che legge GS_ENDPOINT “nudo”
+  if (typeof GS_ENDPOINT === 'undefined') { var GS_ENDPOINT = window.GS_ENDPOINT; }
 </script>
   
   <script>
@@ -1614,7 +1616,8 @@ function adjustStepsSpacing() {
       timestamp: new Date().toISOString()
     });
 
-    const resp = await fetch(GS_ENDPOINT, {
+    const endpoint = (typeof GS_ENDPOINT !== 'undefined' && GS_ENDPOINT) || window.GS_ENDPOINT;
+const resp = await fetch(endpoint, {
       method: 'POST',
       headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
       body: params.toString()
