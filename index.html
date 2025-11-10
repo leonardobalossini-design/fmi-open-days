@@ -1566,7 +1566,7 @@ function adjustStepsSpacing() {
             return labels[license] || license;
         }
 
-        async function submitRegistration() {
+       async function submitRegistration() {
   const nextBtn = document.getElementById('next-step');
   const originalText = nextBtn.textContent;
   nextBtn.textContent = 'Invio in corso...';
@@ -1586,7 +1586,7 @@ function adjustStepsSpacing() {
       }
     });
 
-    // Costruisci il payload (nomi colonna = intestazioni del foglio)
+    // Costruisci il payload per Google Sheets
     const params = new URLSearchParams({
       id: generateId(),
       nome: raw['nome'] || '',
@@ -1614,14 +1614,14 @@ function adjustStepsSpacing() {
       timestamp: new Date().toISOString()
     });
 
-    // Invio al Web App
+    // Manda i dati al Web App di Apps Script
     await fetch(GS_ENDPOINT, {
       method: 'POST',
       body: params,
-      mode: 'no-cors' // evitiamo problemi CORS, non leggiamo la risposta
+      mode: 'no-cors' // niente errore CORS, non leggiamo risposta
     });
 
-    // UI di successo (già presente nel tuo markup)
+    // Mostra schermata di successo
     document.getElementById('registration-summary').classList.add('hidden');
     document.getElementById('registration-success').classList.remove('hidden');
     showToast('Iscrizione inviata!', 'success');
@@ -1629,86 +1629,12 @@ function adjustStepsSpacing() {
   } catch (err) {
     console.error('Registration error:', err);
     showToast('Errore durante l’invio. Riprova.', 'error');
+
     nextBtn.textContent = originalText;
     nextBtn.disabled = false;
     return;
   }
 }
-            // Show loading state
-            const nextBtn = document.getElementById('next-step');
-            const originalText = nextBtn.textContent;
-            nextBtn.textContent = 'Invio in corso...';
-            nextBtn.disabled = true;
-
-            try {
-                // Collect all form data
-                const formData = {};
-                document.querySelectorAll('#registration-wizard input, #registration-wizard select').forEach(input => {
-                    if (input.type === 'checkbox' || input.type === 'radio') {
-                        if (input.checked) {
-                            formData[input.name] = input.value || true;
-                        }
-                    } else if (input.value) {
-                        formData[input.name] = input.value;
-                    }
-                });
-
-                // Prepare data for SDK
-                const registrationRecord = {
-                    id: generateId(),
-                    nome: formData.nome || '',
-                    cognome: formData.cognome || '',
-                    data_nascita: formData['data-nascita'] || '',
-                    email: formData.email || '',
-                    telefono: formData.telefono || '',
-                    provincia: formData.provincia || '',
-                    minorenne: registrationData.minorenne || false,
-                    genitore_nome: formData['genitore-nome'] || '',
-                    genitore_telefono: formData['genitore-telefono'] || '',
-                    programma: 'open-day',
-                    tappa: formData.tappa || '',
-                    esperienza: formData.esperienza || '',
-                    licenza_fmi: formData['licenza-fmi'] || '',
-                    moto_richiesta: formData['moto-richiesta'] || '',
-                    equipaggiamento: formData.equipaggiamento || false,
-                    taglia_tuta: formData['taglia-tuta'] || '',
-                    taglia_casco: formData['taglia-casco'] || '',
-                    taglia_stivali: formData['taglia-stivali'] || '',
-                    consenso_privacy: formData['consenso-privacy'] || false,
-                    consenso_comunicazioni: formData['consenso-comunicazioni'] || false,
-                    consenso_immagini: formData['consenso-immagini'] || false,
-                    stato: 'in-verifica',
-                    timestamp: new Date().toISOString()
-                };
-
-                // Submit to Data SDK
-                if (window.dataSdk) {
-                    const result = await window.dataSdk.create(registrationRecord);
-                    
-                    if (result.isOk) {
-                        // Show success
-                        document.getElementById('registration-summary').classList.add('hidden');
-                        document.getElementById('registration-success').classList.remove('hidden');
-                        
-                        // Hide navigation
-                        document.querySelector('.wizard-content').parentElement.nextElementSibling.classList.add('hidden');
-                        
-                        showToast('Iscrizione completata con successo!', 'success');
-                    } else {
-                        throw new Error(result.error.message || 'Errore durante l\'invio');
-                    }
-                } else {
-                    throw new Error('Sistema di registrazione non disponibile');
-                }
-            } catch (error) {
-                console.error('Registration error:', error);
-                showToast('Errore durante l\'invio dell\'iscrizione. Riprova.', 'error');
-                
-                // Restore button
-                nextBtn.textContent = originalText;
-                nextBtn.disabled = false;
-            }
-        }
 
         function generateId() {
             return 'reg_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
