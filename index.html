@@ -1567,11 +1567,73 @@ function adjustStepsSpacing() {
         }
 
         async function submitRegistration() {
-            if (currentRecordCount >= 999) {
-                showToast('Limite massimo di 999 iscrizioni raggiunto. Riprova più tardi.', 'error');
-                return;
-            }
+  const nextBtn = document.getElementById('next-step');
+  const originalText = nextBtn.textContent;
+  nextBtn.textContent = 'Invio in corso...';
+  nextBtn.disabled = true;
 
+  try {
+    // Raccogli tutti i campi del wizard
+    const formRoot = document.getElementById('registration-wizard');
+    const inputs = formRoot.querySelectorAll('input, select');
+
+    const raw = {};
+    inputs.forEach(el => {
+      if (el.type === 'checkbox' || el.type === 'radio') {
+        if (el.checked) raw[el.name] = el.value || true;
+      } else if (el.value) {
+        raw[el.name] = el.value;
+      }
+    });
+
+    // Costruisci il payload (nomi colonna = intestazioni del foglio)
+    const params = new URLSearchParams({
+      id: generateId(),
+      nome: raw['nome'] || '',
+      cognome: raw['cognome'] || '',
+      data_nascita: raw['data-nascita'] || '',
+      email: raw['email'] || '',
+      telefono: raw['telefono'] || '',
+      provincia: raw['provincia'] || '',
+      minorenne: (registrationData.minorenne ? 'TRUE' : 'FALSE'),
+      genitore_nome: raw['genitore-nome'] || '',
+      genitore_telefono: raw['genitore-telefono'] || '',
+      programma: 'open-day',
+      tappa: raw['tappa'] || '',
+      esperienza: raw['esperienza'] || '',
+      licenza_fmi: raw['licenza-fmi'] || '',
+      moto_richiesta: raw['moto-richiesta'] || '',
+      equipaggiamento: (raw['equipaggiamento'] ? 'TRUE' : 'FALSE'),
+      taglia_tuta: raw['taglia-tuta'] || '',
+      taglia_casco: raw['taglia-casco'] || '',
+      taglia_stivali: raw['taglia-stivali'] || '',
+      consenso_privacy: (raw['consenso-privacy'] ? 'TRUE' : 'FALSE'),
+      consenso_comunicazioni: (raw['consenso-comunicazioni'] ? 'TRUE' : 'FALSE'),
+      consenso_immagini: (raw['consenso-immagini'] ? 'TRUE' : 'FALSE'),
+      stato: 'in-verifica',
+      timestamp: new Date().toISOString()
+    });
+
+    // Invio al Web App
+    await fetch(GS_ENDPOINT, {
+      method: 'POST',
+      body: params,
+      mode: 'no-cors' // evitiamo problemi CORS, non leggiamo la risposta
+    });
+
+    // UI di successo (già presente nel tuo markup)
+    document.getElementById('registration-summary').classList.add('hidden');
+    document.getElementById('registration-success').classList.remove('hidden');
+    showToast('Iscrizione inviata!', 'success');
+
+  } catch (err) {
+    console.error('Registration error:', err);
+    showToast('Errore durante l’invio. Riprova.', 'error');
+    nextBtn.textContent = originalText;
+    nextBtn.disabled = false;
+    return;
+  }
+}
             // Show loading state
             const nextBtn = document.getElementById('next-step');
             const originalText = nextBtn.textContent;
