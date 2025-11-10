@@ -1890,8 +1890,6 @@ if (secondaryCtaEl) secondaryCtaEl.textContent = config.secondary_cta || default
 
         // Event listeners
 document.addEventListener('DOMContentLoaded', () => {
-  // SDK dati (protetto)
-  try { initializeDataSDK(); } catch (e) { console.warn('DataSDK init skipped:', e); }
 
   // FAQ (protetto)
   try { initializeFAQ(); } catch (e) { console.warn('FAQ init skipped:', e); }
