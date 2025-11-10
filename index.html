@@ -1650,9 +1650,11 @@ function initializeFormInteractions() {
 // --- Init globale ---
 
 document.addEventListener('DOMContentLoaded', () => {
+  // Inizializzazioni
   initializeFAQ();
   initializeFormInteractions();
 
+  // Navigazione menu principale
   document.querySelectorAll('.nav-link').forEach(link => {
     link.addEventListener('click', (e) => {
       e.preventDefault();
@@ -1661,23 +1663,62 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
+  // CTA Hero / Nav
   const primaryCta   = document.getElementById('primary-cta');
   const secondaryCta = document.getElementById('secondary-cta');
   const navIscriviti = document.getElementById('nav-iscriviti');
   const mobileIscr   = document.getElementById('mobile-iscriviti');
 
-  if (primaryCta)   primaryCta.addEventListener('click', e => { e.preventDefault(); showRegistrationWizard(); });
-  if (secondaryCta) secondaryCta.addEventListener('click', e => { e.preventDefault(); showPage('calendar'); });
-  if (navIscriviti) navIscriviti.addEventListener('click', e => { e.preventDefault(); showRegistrationWizard(); });
-  if (mobileIscr)   mobileIscr.addEventListener('click', e => { e.preventDefault(); showRegistrationWizard(); });
+  if (primaryCta) {
+    primaryCta.addEventListener('click', e => {
+      e.preventDefault();
+      showRegistrationWizard();
+    });
+  }
 
+  if (secondaryCta) {
+    secondaryCta.addEventListener('click', e => {
+      e.preventDefault();
+      showPage('calendar');
+    });
+  }
+
+  if (navIscriviti) {
+    navIscriviti.addEventListener('click', e => {
+      e.preventDefault();
+      showRegistrationWizard();
+    });
+  }
+
+  if (mobileIscr) {
+    mobileIscr.addEventListener('click', e => {
+      e.preventDefault();
+      showRegistrationWizard();
+    });
+  }
+
+  // Wizard: pulsanti
   const closeBtn = document.getElementById('close-wizard');
   const nextBtn  = document.getElementById('next-step');
   const prevBtn  = document.getElementById('prev-step');
-  if (closeBtn) closeBtn.addEventListener('click', (e) => { e.preventDefault(); e.stopPropagation(); hideRegistrationWizard(); });
-  if (nextBtn)  nextBtn.addEventListener('click', nextStep);
-  if (prevBtn)  prevBtn.addEventListener('click', prevStep);
 
+  if (closeBtn) {
+    closeBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      hideRegistrationWizard();
+    });
+  }
+
+  if (nextBtn) {
+    nextBtn.addEventListener('click', nextStep);
+  }
+
+  if (prevBtn) {
+    prevBtn.addEventListener('click', prevStep);
+  }
+
+  // Mobile menu
   const mobileMenu = document.getElementById('mobile-menu');
   const toggleBtn  = document.getElementById('mobile-menu-btn');
   const bodyEl     = document.body;
@@ -1687,8 +1728,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     toggleBtn.addEventListener('click', () => {
       mobileMenu.classList.toggle('hidden');
-      if (mobileMenu.classList.contains('hidden')) bodyEl.style.overflow = '';
-      else bodyEl.style.overflow = 'hidden';
+
+      if (mobileMenu.classList.contains('hidden')) {
+        bodyEl.style.overflow = '';
+      } else {
+        bodyEl.style.overflow = 'hidden';
+      }
+
       const expanded = toggleBtn.getAttribute('aria-expanded') === 'true';
       toggleBtn.setAttribute('aria-expanded', String(!expanded));
     });
@@ -1704,8 +1750,10 @@ document.addEventListener('DOMContentLoaded', () => {
     document.addEventListener('click', (e) => {
       const isOpen = !mobileMenu.classList.contains('hidden');
       if (!isOpen) return;
+
       const clickInside = mobileMenu.contains(e.target);
-      const clickOnBtn = toggleBtn.contains(e.target);
+      const clickOnBtn  = toggleBtn.contains(e.target);
+
       if (!clickInside && !clickOnBtn) {
         mobileMenu.classList.add('hidden');
         bodyEl.style.overflow = '';
@@ -1714,9 +1762,58 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  // Pagina iniziale + layout wizard
   showPage('home');
   adjustStepsSpacing();
   window.addEventListener('resize', adjustStepsSpacing);
+
+  // --- FORM CONTATTI: INVIO VERSO GOOGLE APPS SCRIPT ---
+  const contactForm = document.querySelector('#page-contact form');
+  if (contactForm) {
+    contactForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const submitBtn = contactForm.querySelector('button[type="submit"]');
+      const originalText = submitBtn.textContent;
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Invio in corso...';
+
+      const formData = new FormData(contactForm);
+
+      const params = new URLSearchParams({
+        type: 'contact',
+        nome: formData.get('contact-nome') || '',
+        cognome: formData.get('contact-cognome') || '',
+        email: formData.get('contact-email') || '',
+        categoria: formData.get('contact-categoria') || '',
+        messaggio: formData.get('contact-messaggio') || '',
+        timestamp: new Date().toISOString()
+      });
+
+      try {
+        const endpoint = (typeof GS_ENDPOINT !== 'undefined' && GS_ENDPOINT) || window.GS_ENDPOINT;
+        if (!endpoint) throw new Error('Endpoint non configurato');
+
+        const resp = await fetch(endpoint, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
+          body: params.toString()
+        });
+
+        const json = await resp.json();
+        if (!resp.ok || !json.ok) throw new Error(json.error || 'Errore invio');
+
+        showToast('Messaggio inviato con successo!', 'success');
+        contactForm.reset();
+      } catch (err) {
+        console.error(err);
+        showToast('Errore durante l’invio del messaggio.', 'error');
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = originalText;
+      }
+    });
+  }
 });
 </script>
 </body>
